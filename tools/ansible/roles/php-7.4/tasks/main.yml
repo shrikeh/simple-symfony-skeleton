@@ -1,0 +1,21 @@
+---
+- name: Update apt
+  apt:
+    name: software-properties-common
+    state: latest
+
+- name: Add the ondrej/php repo
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+    update_cache: yes
+
+- name: Install php 7.4
+  apt:
+    name: php7.4
+    state: latest
+
+- name: Install composer
+  apt:
+    name: composer
+    state: latest

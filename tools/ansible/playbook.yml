@@ -1,0 +1,11 @@
+---
+- hosts: php
+  become: yes
+  roles:
+    - php-7.4
+
+- hosts: php_test
+  become: yes
+  roles:
+    - php-7.4
+    - php-7.4-test

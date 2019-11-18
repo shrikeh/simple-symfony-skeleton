@@ -1,0 +1,18 @@
+{
+    "timeout": 10,
+    "source": {
+        "directories": [
+            "application\/src",
+            "application\/lib"
+        ]
+    },
+    "phpUnit": {
+        "configDir": "./"
+    },
+    "logs": {
+        "text": "build/logs/infection.log"
+    },
+    "mutators": {
+        "@default": true
+    }
+}

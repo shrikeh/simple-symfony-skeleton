@@ -1,0 +1,7 @@
+vendor/
+.*
+*.iml
+*.log
+!.git*
+!.editorconfig
+!.phpspec
