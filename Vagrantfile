@@ -13,12 +13,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.user.defaults = {
-      "vm" => {
-          "php74_box" => "hashicorp/bionic64",
-          "ip" => "192.168.15.107",
-          "host_memory" => 1024,
-          "host_cpus" => 2,
-          "hostname" => "php74.shrikeh.vagrant"
+      :vm => {
+          :php74_box => "hashicorp/bionic64",
+          :ip => "192.168.15.107",
+          :host_memory => 1024,
+          :host_cpus => 2,
+          :hostname => "php74.shrikeh.vagrant",
+          :synced_folder => "/vagrant",
+          :user => "vagrant"
       }
   }
 
@@ -26,8 +28,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     php74.vm.hostname = config.user.vm.hostname
     php74.vm.box = config.user.vm.php74_box
 
-    php74.vm.synced_folder "./", "/vagrant", create: true,
-       owner: "vagrant",
+    # Disable the default synced folder...
+    config.vm.synced_folder "./", "/vagrant", disabled: true
+    # Now use the one as set in the user config
+    php74.vm.synced_folder "./", config.user.vm.synced_folder, create: true, disabled: false,
+       owner: config.user.vm.user,
        group: "www-data",
        mount_options: ["dmode=775,fmode=774"]
 
@@ -47,7 +52,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           "vagrant" => ["php74"]
       }
       ansible.extra_vars = {
-          docker_users: ["vagrant"]
+          docker_users: [config.user.vm.user],
+          vagrant_synced_folder_path: config.user.vm.synced_folder
       }
     end
   end
