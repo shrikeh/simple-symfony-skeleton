@@ -1,0 +1,6 @@
+---
+- name: Add .bash_profile to vagrant user
+  template:
+    dest: '/home/vagrant/.bash_profile'
+    src: 'templates/bash_profile.j2'
+    owner: vagrant

@@ -40,8 +40,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     php74.vm.provision "ansible" do |ansible|
       ansible.playbook = "tools/ansible/playbook.yml"
       ansible.compatibility_mode = "2.0"
+      ansible.galaxy_role_file = "tools/ansible/requirements.yml"
+      ansible.galaxy_roles_path = "tools/ansible/galaxy"
       ansible.groups = {
-          "php_test" => ["php74"]
+          "php_test" => ["php74"],
+          "vagrant" => ["php74"]
+      }
+      ansible.extra_vars = {
+          docker_users: ["vagrant"]
       }
     end
   end

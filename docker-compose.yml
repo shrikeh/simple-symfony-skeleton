@@ -5,15 +5,20 @@ services:
   cli:
     build:
       context: ./
-      dockerfile: tools/docker/cli/Dockerfile
+      dockerfile: ./tools/docker/cli/Dockerfile
+    environment:
+      SYMFONY_CACHE_DIR: /cache
+    volumes:
+      - type: tmpfs
+        target: /cache
   phpunit:
     build:
       context: ./
-      dockerfile: tools/docker/phpunit/Dockerfile
+      dockerfile: ./tools/docker/phpunit/Dockerfile
     environment:
       PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
     volumes:
-      - .:/security-check
+      - .:/phpunit
       - type: tmpfs
         target: /cache
   security-check:

@@ -7,7 +7,7 @@ infection:
 	./vendor/bin/infection
 
 phpunit:
-	docker-compose run phpunit
+	@./tools/bin/phpunit.sh
 
 security-check:
-	symfony security:check
+	@./tools/bin/security-check.sh

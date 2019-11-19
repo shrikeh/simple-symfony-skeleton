@@ -7,5 +7,10 @@
 - hosts: php_test
   become: yes
   roles:
+    - docker
     - php-7.4
     - php-7.4-test
+
+- hosts: vagrant
+  roles:
+    - vagrant

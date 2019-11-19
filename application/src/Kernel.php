@@ -32,11 +32,27 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getProjectDir(): string
     {
         return dirname(__DIR__);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir(): string
+    {
+        return $_ENV['SYMFONY_CACHE_DIR'] ?? parent::getCacheDir();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogDir(): string
+    {
+        return $_ENV['SYMFONY_LOG_DIR'] ?? parent::getLogDir();
     }
 
     /**
