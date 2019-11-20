@@ -21,6 +21,7 @@ final class TestHandler implements MessageHandlerInterface
     /**
      * TestHandler constructor.
      * @param OutputInterface $output
+     * @param TestService $testService
      */
     public function __construct(OutputInterface $output, TestService $testService)
     {
