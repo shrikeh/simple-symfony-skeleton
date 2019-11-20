@@ -8,12 +8,13 @@ use App\Message\TestMessage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class TestCommand extends Command
 {
     public const NAME = 'shrikeh:test';
+
+    public const DEFAULT_TEST_MESSAGE = 'we are here';
     /**
      * @var MessageBusInterface
      */
@@ -35,6 +36,6 @@ final class TestCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->messageBus->dispatch(new TestMessage('we are here'));
+        $this->messageBus->dispatch(new TestMessage(static::DEFAULT_TEST_MESSAGE));
     }
 }
