@@ -32,7 +32,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "application/src",
-            "Shrikeh\\": "application/lib"
+            "Shrikeh\\TestSymfonyApp\\": "application/lib"
         }
     },
     "autoload-dev": {

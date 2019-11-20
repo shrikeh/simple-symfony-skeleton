@@ -10,7 +10,7 @@ services:
   App\:
     resource: '%kernel.project_dir%/src/*'
     exclude: '%kernel.project_dir%/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-  Shrikeh\:
+  Shrikeh\TestSymfonyApp\:
     resource: '%kernel.project_dir%/lib/*'
 
   Symfony\Component\Console\Output\OutputInterface:
