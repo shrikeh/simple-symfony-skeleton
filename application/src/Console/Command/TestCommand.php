@@ -8,11 +8,10 @@ use App\Message\TestMessage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class TestCommand extends Command implements ContainerAwareInterface
+final class TestCommand extends Command
 {
     public const NAME = 'shrikeh:test';
     /**
@@ -41,15 +40,6 @@ final class TestCommand extends Command implements ContainerAwareInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->container->set(OutputInterface::class, $output);
         $this->messageBus->dispatch(new TestMessage('we are here'));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
     }
 }

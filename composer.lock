@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d21ba92fc5fc6787c05a16ea9e91eb53",
+    "content-hash": "83b0124963f25013ca276deef359a177",
     "packages": [
         {
             "name": "phpoption/phpoption",
@@ -1776,6 +1776,53 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2019-10-30T12:58:49+00:00"
+        },
+        {
+            "name": "tolerance/tolerance",
+            "version": "0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Tolerance/Tolerance.git",
+                "reference": "9723e73c25333bf2decb9b6eda7d1036465b7a85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Tolerance/Tolerance/zipball/9723e73c25333bf2decb9b6eda7d1036465b7a85",
+                "reference": "9723e73c25333bf2decb9b6eda7d1036465b7a85",
+                "shasum": ""
+            },
+            "replace": {
+                "sroze/tolerance": "self.version"
+            },
+            "require-dev": {
+                "beberlei/metrics": "^2.1",
+                "behat/behat": "~3.1.0rc1",
+                "behat/symfony2-extension": "^2.1",
+                "csa/guzzle-bundle": "~2.0@dev",
+                "guzzlehttp/promises": "^1.3",
+                "jms/aop-bundle": "^1.2",
+                "jms/serializer-bundle": "^1.1",
+                "php-amqplib/rabbitmq-bundle": "^1.8",
+                "php-http/client-common": "^1.4",
+                "php-http/mock-client": "^0.3.3",
+                "phpspec/phpspec": "~2.5",
+                "phpunit/phpunit": "^5.1",
+                "ruflin/elastica": "^3.0",
+                "simple-bus/rabbitmq-bundle-bridge": "^3.0",
+                "symfony/symfony": "~2.8|~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Tolerance\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Fault tolerance library and micro-services helpers",
+            "time": "2017-10-06T12:21:00+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

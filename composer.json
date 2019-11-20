@@ -16,6 +16,7 @@
         "symfony/framework-bundle": "^4.3",
         "symfony/messenger": "^4.3",
         "symfony/yaml": "^4.3",
+        "tolerance/tolerance": "^0.4.2",
         "vlucas/phpdotenv": "^3.6"
     },
     "require-dev": {

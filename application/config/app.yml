@@ -1,4 +1,6 @@
 ---
+parameters:
+  env(MESSENGER_TRANSPORT_DSN): 'amqp://guest:guest@amqp:5672/%2f/messages'
 services:
   # default configuration for services in *this* file
   _defaults:
@@ -12,6 +14,3 @@ services:
     exclude: '%kernel.project_dir%/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
   Shrikeh\TestSymfonyApp\:
     resource: '%kernel.project_dir%/lib/*'
-
-  Symfony\Component\Console\Output\OutputInterface:
-    synthetic: true

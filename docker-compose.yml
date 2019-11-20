@@ -2,15 +2,13 @@
 version: "3.7"
 
 services:
-  cli:
-    build:
-      context: ./
-      dockerfile: ./tools/docker/cli/Dockerfile
-    environment:
-      SYMFONY_CACHE_DIR: /cache
-    volumes:
-      - type: tmpfs
-        target: /cache
+  rabbitmq:
+    image: rabbitmq:3.8.1
+    expose:
+      - 5672
+    networks:
+      - amqp_consumers
+      - amqp_senders
   phpunit:
     build:
       context: ./
@@ -27,3 +25,34 @@ services:
       dockerfile: tools/docker/security-check/Dockerfile
     volumes:
       - .:/security-check
+  cli:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/cli/Dockerfile
+    environment:
+      SYMFONY_CACHE_DIR: /cache
+      MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
+    volumes:
+      - type: tmpfs
+        target: /cache
+    networks:
+      - amqp_senders
+    depends_on:
+      - rabbitmq
+  consumer:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/consumer/Dockerfile
+    environment:
+      SYMFONY_CACHE_DIR: /cache
+      MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
+    volumes:
+      - type: tmpfs
+        target: /cache
+    networks:
+      - amqp_consumers
+    depends_on:
+      - rabbitmq
+networks:
+  amqp_consumers:
+  amqp_senders:
