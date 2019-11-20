@@ -39,7 +39,8 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\Behat\\": "tests/behat/src",
-            "Tests\\Unit\\": "tests/unit/src"
+            "Tests\\Integration\\": "tests/integration/src",
+            "Tests\\Spec\\": "tests/specs/src"
         }
     },
     "conflict": {

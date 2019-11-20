@@ -6,6 +6,10 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+vagrant-rebuild:
+	vagrant halt
+	vagrant destroy -f
+	vagrant u[
 run: build-docker
 	docker-compose up
 

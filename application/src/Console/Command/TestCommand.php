@@ -20,11 +20,6 @@ final class TestCommand extends Command
     private MessageBusInterface $messageBus;
 
     /**
-     * @var ContainerInterface
-     */
-    private ContainerInterface $container;
-
-    /**
      * TestCommand constructor.
      * @param MessageBusInterface $messageBus
      */

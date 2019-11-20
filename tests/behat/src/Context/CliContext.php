@@ -1,7 +1,9 @@
 <?php
 namespace Tests\Behat\Context;
 
-final class CliContext
+use Behat\Behat\Context\Context;
+
+final class CliContext implements Context
 {
 
 }

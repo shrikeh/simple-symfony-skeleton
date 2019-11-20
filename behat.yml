@@ -1,0 +1,11 @@
+---
+default:
+  autoload:
+    '': "%paths.base%/tests/behat/src"
+  suites:
+    default:
+      paths:
+        features: "%paths.base%/features"
+        bootstrap: "%paths.base%/tests/behat/bootstrap.php"
+      contexts:
+        - Tests\Behat\Context\CliContext: ~

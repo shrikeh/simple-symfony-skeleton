@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Kernel;
@@ -10,7 +11,7 @@ final class TestCommandTest extends TestCase
     /**
      *
      */
-    public function testCanBootKernel(): void
+    public function testSends(): void
     {
         $kernel = new Kernel('test', false);
         $this->assertInstanceOf(BaseKernel::class, $kernel);
