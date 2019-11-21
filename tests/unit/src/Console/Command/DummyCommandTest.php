@@ -20,14 +20,18 @@ use Symfony\Component\Messenger\Stamp\SentStamp;
 
 final class DummyCommandTest extends TestCase
 {
+    /** @var  ObjectProphecy */
     private ObjectProphecy $input;
-
+    /** @var  ObjectProphecy */
     private ObjectProphecy $output;
-
+    /** @var  ObjectProphecy */
     private ObjectProphecy $messageBus;
-
+    /** @var  ObjectProphecy */
     private ObjectProphecy $logger;
 
+    /**
+     * {@inheritDoc}
+     */
     protected function setUp(): void
     {
         /** @var  MessageBusInterface $messageBus */
@@ -37,7 +41,6 @@ final class DummyCommandTest extends TestCase
         $this->output = $this->prophesize(OutputInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
     }
-
 
     public function testItSendsADummyMessageToTheMessageBus(): void
     {

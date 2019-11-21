@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
@@ -19,33 +20,54 @@ class Kernel extends BaseKernel implements KernelInterface
 {
     use MicroKernelTrait;
 
+    public const SERVER_APP_ENV = 'APP_ENV';
+    public const SERVER_APP_DEBUG = 'APP_DEBUG';
+    public const SERVER_CACHE_DIR = 'SYMFONY_CACHE_DIR';
+    public const SERVER_LOG_DIR = 'SYMFONY_LOG_DIR';
+
     /** @var string  */
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    /**
+     * @var ServerBag
+     */
+    private $serverBag;
 
     /**
+     * @param ServerBag $serverBag
      * @param bool|null $debug
      * @return Kernel
      */
-    public static function fromServer(bool $debug = null): self
+    public static function fromServerBag(ServerBag $serverBag, bool $debug = null): self
     {
-        $env = $_SERVER['APP_ENV'];
-        $debug = $debug ?? (bool) $_SERVER['APP_DEBUG'];
+        $env = $serverBag->get(static::SERVER_APP_ENV);
+        $debug = $debug ?? $serverBag->getBoolean(static::SERVER_APP_DEBUG);
 
-        return new self($env, $debug);
+        return new static($serverBag, $env, $debug);
+
     }
 
     /**
      * Kernel constructor.
+     * @param ServerBag $serverBag
      * @param string $environment
      * @param bool $debug
-     * @throws UnrecognisedEnvironment
      */
-    public function __construct(string $environment, bool $debug)
+    public function __construct(ServerBag $serverBag, string $environment, bool $debug)
     {
         if (!in_array($environment, static::ALLOWED_ENVS, true)) {
             throw UnrecognisedEnvironment::create($environment);
         }
         parent::__construct($environment, $debug);
+
+        $this->serverBag = $serverBag;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBooted(): bool
+    {
+        return $this->booted;
     }
 
     /**
@@ -74,7 +96,7 @@ class Kernel extends BaseKernel implements KernelInterface
      */
     public function getCacheDir(): string
     {
-        return $_SERVER['SYMFONY_CACHE_DIR'] ?? parent::getCacheDir();
+        return $this->serverBag->get(static::SERVER_CACHE_DIR, parent::getCacheDir());
     }
 
     /**
@@ -82,7 +104,7 @@ class Kernel extends BaseKernel implements KernelInterface
      */
     public function getLogDir(): string
     {
-        return $_SERVER['SYMFONY_LOG_DIR'] ?? parent::getLogDir();
+        return $this->serverBag->get(static::SERVER_LOG_DIR, parent::getLogDir());
     }
 
     /**
@@ -90,7 +112,7 @@ class Kernel extends BaseKernel implements KernelInterface
      * @param LoaderInterface $loader
      * @throws \Exception
      */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    private function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
         $container->setParameter('container.dumper.inline_class_loader', true);

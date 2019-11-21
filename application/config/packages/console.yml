@@ -1,4 +1,4 @@
 ---
 services:
-  Symfony\Component\Console\Output\ConsoleOutput:
+  Symfony\Component\Console\Output\ConsoleOutput: ~
   Symfony\Component\Console\Output\OutputInterface: '@Symfony\Component\Console\Output\ConsoleOutput'
