@@ -12,6 +12,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "shrikeh/teapot": "^2.3",
         "symfony/console": "^4.3",
         "symfony/framework-bundle": "^4.3",
         "symfony/messenger": "^4.3",
@@ -22,6 +23,7 @@
     "require-dev": {
         "ext-xdebug": "*",
         "behat/behat": "^3.5@dev",
+        "codedungeon/phpunit-result-printer": "^0.26.2",
         "friendsofphp/php-cs-fixer": "^2.16",
         "infection/infection": "^0.14.2",
         "phpmetrics/phpmetrics": "^2.4",
@@ -39,8 +41,9 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\Behat\\": "tests/behat/src",
-            "Tests\\Integration\\": "tests/integration/src",
-            "Tests\\Spec\\": "tests/specs/src"
+            "Tests\\Mock\\": "tests/mocks",
+            "Tests\\Unit\\App\\": "tests/unit/src",
+            "Tests\\Unit\\Shrikeh\\": "tests/unit/lib"
         }
     },
     "conflict": {

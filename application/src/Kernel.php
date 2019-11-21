@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use function dirname;
-
+use App\Kernel\Exception\UnrecognisedEnvironment;
+use App\Kernel\KernelInterface;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -13,11 +13,40 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
-class Kernel extends BaseKernel
+use function dirname;
+
+class Kernel extends BaseKernel implements KernelInterface
 {
     use MicroKernelTrait;
 
+    /** @var string  */
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+
+    /**
+     * @param bool|null $debug
+     * @return Kernel
+     */
+    public static function fromServer(bool $debug = null): self
+    {
+        $env = $_SERVER['APP_ENV'];
+        $debug = $debug ?? (bool) $_SERVER['APP_DEBUG'];
+
+        return new self($env, $debug);
+    }
+
+    /**
+     * Kernel constructor.
+     * @param string $environment
+     * @param bool $debug
+     * @throws UnrecognisedEnvironment
+     */
+    public function __construct(string $environment, bool $debug)
+    {
+        if (!in_array($environment, static::ALLOWED_ENVS, true)) {
+            throw UnrecognisedEnvironment::create($environment);
+        }
+        parent::__construct($environment, $debug);
+    }
 
     /**
      * @return iterable
@@ -45,7 +74,7 @@ class Kernel extends BaseKernel
      */
     public function getCacheDir(): string
     {
-        return $_ENV['SYMFONY_CACHE_DIR'] ?? parent::getCacheDir();
+        return $_SERVER['SYMFONY_CACHE_DIR'] ?? parent::getCacheDir();
     }
 
     /**
@@ -53,7 +82,7 @@ class Kernel extends BaseKernel
      */
     public function getLogDir(): string
     {
-        return $_ENV['SYMFONY_LOG_DIR'] ?? parent::getLogDir();
+        return $_SERVER['SYMFONY_LOG_DIR'] ?? parent::getLogDir();
     }
 
     /**
@@ -78,7 +107,7 @@ class Kernel extends BaseKernel
     /**
      * {@inheritDoc}
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    private function configureRoutes(RouteCollectionBuilder $routes): void
     {
     }
 }

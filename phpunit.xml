@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.4/phpunit.xsd"
          backupGlobals="false"
          beStrictAboutOutputDuringTests="true"
          bootstrap="tests/unit/bootstrap.php"
@@ -8,11 +8,13 @@
          failOnRisky="true"
          failOnWarning="true"
          verbose="true"
+         printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer"
 >
     <php>
         <ini name="error_reporting" value="2147483647"/>
         <ini name="display_errors" value="1"/>
-        <env name="APP_ENV" value="phpunit" />
+        <server name="APP_ENV" value="test" />
+        <server name="APP_DEBUG" value="0" />
     </php>
     <logging>
         <log type="coverage-html" target="./build/coverage" />

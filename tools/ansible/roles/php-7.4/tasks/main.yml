@@ -10,9 +10,13 @@
     state: present
     update_cache: yes
 
-- name: Install php 7.4
+- name: Install php 7.4 and dev tools
   apt:
-    name: php7.4
+    pkg:
+      - php7.4
+      - pkg-php-tools
+      - php-dev
+      - php-amqp
     state: latest
 
 - name: Install composer

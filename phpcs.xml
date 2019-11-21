@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Shrikeh">
     <rule ref="PSR12" />
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found" />
     <!-- Wherever Symfony stores the precompiled container, we don't care about it -->
     <exclude-pattern>*/cache/*</exclude-pattern>
 </ruleset>

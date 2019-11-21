@@ -1,0 +1,6 @@
+---
+services:
+  Symfony\Component\Console\Output\NullOutput: ~
+  Symfony\Component\Console\Output\OutputInterface:
+    alias: Symfony\Component\Console\Output\NullOutput
+    public: true
