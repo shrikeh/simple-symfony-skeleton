@@ -7,7 +7,7 @@ VAGRANTFILE_API_VERSION = '2'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Automatically download required plugins
-  required_plugins = %w( nugrant vagrant-hostsupdater vagrant-docker-compose )
+  required_plugins = %w( nugrant vagrant-hostsupdater vagrant-docker-compose vagrant-cachier )
   required_plugins.each do |plugin|
     exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(' ')}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
   end
@@ -25,6 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   }
 
   config.vm.define 'php74', primary: true do |php74|
+
     php74.vm.hostname = config.user.vm.hostname
     php74.vm.box = config.user.vm.php74_box
 
@@ -39,6 +40,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
        mount_options: ['dmode=775,fmode=774']
 
     php74.vm.provider :virtualbox do |vb|
+      config.cache.synced_folder_opts = {
+        type: :nfs,
+        # The nolock option can be useful for an NFSv3 client that wants to avoid the
+        # NLM sideband protocol. Without this option, apt-get might hang if it tries
+        # to lock files needed for /var/cache/* operations. All of this can be avoided
+        # by using NFSv4 everywhere. Please note that the tcp option is not the default.
+        mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+      }
+
       vb.customize ['modifyvm', :id, '--memory', config.user.vm.host_memory]
       vb.customize ['modifyvm', :id, '--cpus', config.user.vm.host_cpus]
       vb.customize ['guestproperty', 'set', :id, '/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold', 1000]

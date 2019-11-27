@@ -5,32 +5,51 @@ declare(strict_types=1);
 namespace Tests\Unit\App;
 
 use App\Kernel;
-use App\Kernel\Exception\UnrecognisedEnvironment;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+
+use App\Kernel\Booter\BooterInterface;
+use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
+use App\Kernel\Environment\EnvironmentInterface;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ServerBag;
 
-final class KernelTest extends KernelTestCase
+final class KernelTest extends TestCase
 {
     public function testItReturnsTheCorrectBootedState(): void
     {
-        $kernel = new Kernel(new ServerBag(), Kernel::ENV_TEST, false);
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
         $this->assertFalse($kernel->isBooted());
         $kernel->boot();
         $this->assertTrue($kernel->isBooted());
-    }
-
-
-    public function testItThrowsAnExceptionIfTheEnvironmentIsUnrecognised(): void
-    {
-        $this->expectException(UnrecognisedEnvironment::class);
-        new Kernel(new ServerBag(), 'foo', false);
+        $booter->boot($kernel)->shouldHaveBeenCalled();
     }
 
     public function testItUsesTheCacheDirFromTheServer(): void
     {
         $cacheDir = 'foo';
         $serverBag = new ServerBag([Kernel::SERVER_CACHE_DIR => $cacheDir]);
-        $kernel = new Kernel($serverBag, Kernel::ENV_DEV, false);
+
+        /** @var EnvironmentInterface $environment */
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $environment->getServerBag()->willReturn($serverBag);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
 
         $this->assertSame($cacheDir, $kernel->getCacheDir());
     }
@@ -39,58 +58,61 @@ final class KernelTest extends KernelTestCase
     {
         $logDir = 'bar';
         $serverBag = new ServerBag([Kernel::SERVER_LOG_DIR => $logDir]);
-        $kernel = new Kernel($serverBag, Kernel::ENV_DEV, false);
+        /** @var EnvironmentInterface $environment */
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $environment->getServerBag()->willReturn($serverBag);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
 
         $this->assertSame($logDir, $kernel->getLogDir());
     }
 
     public function testItUsesTheInjectedDebugMode(): void
     {
-        $serverBag = new ServerBag([
-            Kernel::SERVER_APP_DEBUG => false,
-            Kernel::SERVER_APP_ENV => Kernel::ENV_TEST,
-        ]);
-        $kernel = Kernel::fromServerBag($serverBag, true);
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+        /** @var EnvironmentInterface $environment */
+        $environment->isDebug()->willReturn(true, false);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
 
         $this->assertTrue($kernel->isDebug());
-
-        $serverBag = new ServerBag([
-            Kernel::SERVER_APP_DEBUG => true,
-            Kernel::SERVER_APP_ENV => Kernel::ENV_TEST,
-        ]);
-        $kernel = Kernel::fromServerBag($serverBag, false);
-
         $this->assertFalse($kernel->isDebug());
     }
 
-    public function testItUsesTheServerDebugVarIfNoDebugModeIsExplicitlySet(): void
+    public function testItLoadsTheContainerFromTheBooter(): void
     {
-        $serverBag = new ServerBag([
-            Kernel::SERVER_APP_DEBUG => false,
-            Kernel::SERVER_APP_ENV => Kernel::ENV_TEST,
-        ]);
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+        $container = $this->prophesize(ContainerInterface::class);
 
-        $kernel = Kernel::fromServerBag($serverBag);
-        $this->assertFalse($kernel->isDebug());
+        /** var BooterInterface */
+        $containerProphet = $container->reveal();
+        $booter->getContainer()->willReturn($containerProphet);
 
-        $serverBag = new ServerBag([
-            Kernel::SERVER_APP_DEBUG => true,
-            Kernel::SERVER_APP_ENV => Kernel::ENV_TEST,
-        ]);
-        $kernel = Kernel::fromServerBag($serverBag);
-        $this->assertTrue($kernel->isDebug());
-    }
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
 
-    public function testItConfiguresTheContainer(): void
-    {
-        $serverBag = new ServerBag([
-            Kernel::SERVER_APP_DEBUG => false,
-            Kernel::SERVER_APP_ENV => Kernel::ENV_TEST,
-        ]);
-
-        $kernel = Kernel::fromServerBag($serverBag);
+        $booter->boot($kernel)->shouldBeCalled();
         $kernel->boot();
 
-        $this->assertTrue($kernel->getContainer()->getParameter('container.dumper.inline_class_loader'));
+
+        $this->assertSame($kernel->getContainer(), $containerProphet);
     }
 }

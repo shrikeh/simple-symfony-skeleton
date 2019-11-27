@@ -18,9 +18,11 @@
 - name: Install php 7.4 and dev tools
   apt:
     pkg:
-      - php7.4
+      - php7.4-cli
+      - php7.4-xml
+      - php7.4-json
       - pkg-php-tools
-      - php-dev.
+      - php7.4-dev
       - php-amqp
     state: latest
 
