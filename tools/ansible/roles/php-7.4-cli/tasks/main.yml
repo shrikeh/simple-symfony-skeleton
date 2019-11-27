@@ -1,4 +1,9 @@
 ---
+- name: Remove all previous versions of php
+  apt:
+    name: php
+    state: absent
+
 - name: Update apt
   apt:
     name: software-properties-common
@@ -15,7 +20,7 @@
     pkg:
       - php7.4
       - pkg-php-tools
-      - php-dev
+      - php-dev.
       - php-amqp
     state: latest
 
@@ -23,3 +28,13 @@
   apt:
     name: composer
     state: latest
+
+- name: Install DS library
+  pear:
+    name: pecl/ds
+    state: latest
+
+- name: Add ds to cli user
+  template:
+    dest: "{{ php74_cli_ds_ini_path }}"
+    src: 'templates/ds.ini.j2'

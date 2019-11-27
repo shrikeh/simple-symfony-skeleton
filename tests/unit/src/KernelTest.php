@@ -19,6 +19,7 @@ final class KernelTest extends KernelTestCase
         $this->assertTrue($kernel->isBooted());
     }
 
+
     public function testItThrowsAnExceptionIfTheEnvironmentIsUnrecognised(): void
     {
         $this->expectException(UnrecognisedEnvironment::class);
@@ -80,10 +81,6 @@ final class KernelTest extends KernelTestCase
         $this->assertTrue($kernel->isDebug());
     }
 
-    /**
-     * @covers \App\Kernel::configureContainer
-     * @covers \App\Kernel::initializeContainer
-     */
     public function testItConfiguresTheContainer(): void
     {
         $serverBag = new ServerBag([

@@ -4,62 +4,47 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Kernel\Exception\UnrecognisedEnvironment;
-use App\Kernel\KernelInterface;
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use App\Kernel\Booter\BooterInterface;
+use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
+use App\Kernel\Environment\EnvironmentInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\ServerBag;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-use function dirname;
-
-class Kernel extends BaseKernel implements KernelInterface
+final class Kernel implements KernelInterface
 {
-    use MicroKernelTrait;
-
-    public const SERVER_APP_ENV = 'APP_ENV';
-    public const SERVER_APP_DEBUG = 'APP_DEBUG';
     public const SERVER_CACHE_DIR = 'SYMFONY_CACHE_DIR';
     public const SERVER_LOG_DIR = 'SYMFONY_LOG_DIR';
 
-    /** @var string  */
-    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
     /**
-     * @var ServerBag
+     * @var EnvironmentInterface
      */
-    private $serverBag;
-
+    private EnvironmentInterface $environment;
     /**
-     * @param ServerBag $serverBag
-     * @param bool|null $debug
-     * @return Kernel
+     * @var BooterInterface
      */
-    public static function fromServerBag(ServerBag $serverBag, bool $debug = null): self
-    {
-        $env = $serverBag->get(static::SERVER_APP_ENV);
-        $debug = $debug ?? $serverBag->getBoolean(static::SERVER_APP_DEBUG);
-
-        return new static($serverBag, $env, $debug);
-
-    }
+    private BooterInterface $booter;
+    /**
+     * @var ConfigurationLoaderInterface
+     */
+    private ConfigurationLoaderInterface $configurationLoader;
 
     /**
      * Kernel constructor.
-     * @param ServerBag $serverBag
-     * @param string $environment
-     * @param bool $debug
+     * @param EnvironmentInterface $environment
+     * @param BooterInterface $booter
+     * @param ConfigurationLoaderInterface $configurationLoader
      */
-    public function __construct(ServerBag $serverBag, string $environment, bool $debug)
-    {
-        if (!in_array($environment, static::ALLOWED_ENVS, true)) {
-            throw UnrecognisedEnvironment::create($environment);
-        }
-        parent::__construct($environment, $debug);
-
-        $this->serverBag = $serverBag;
+    public function __construct(
+        EnvironmentInterface $environment,
+        BooterInterface $booter,
+        ConfigurationLoaderInterface $configurationLoader
+    ) {
+        $this->environment = $environment;
+        $this->booter = $booter;
+        $this->configurationLoader = $configurationLoader;
     }
 
     /**
@@ -67,24 +52,99 @@ class Kernel extends BaseKernel implements KernelInterface
      */
     public function isBooted(): bool
     {
-        return $this->booted;
+        return $this->booter->isBooted();
     }
 
     /**
-     * @return iterable
+     * {@inheritDoc}
+     */
+    public function getCharset(): string
+    {
+        return $this->environment->getCharset();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+        // TODO: Implement handle() method.
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function registerBundles(): iterable
     {
-        $contents = require $this->getProjectDir() . '/config/bundles.php';
-        foreach ($contents as $class => $envs) {
-            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
-                yield new $class();
-            }
-        }
+        return $this->booter->getBundles();
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     */
+    public function boot(): void
+    {
+        $this->booter->boot($this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function shutdown(): void
+    {
+        $this->booter->shutdown();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBundles(): iterable
+    {
+        return $this->booter->getBundles();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBundle($name): Bundle
+    {
+        // TODO: Implement getBundle() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function locateResource($name)
+    {
+        // TODO: Implement locateResource() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        // TODO: Implement getName() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEnvironment(): string
+    {
+        return $this->environment->getEnvironmentName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isDebug(): bool
+    {
+        return $this->environment->isDebug();
+    }
+
+    /**
+     * @return string
      */
     public function getProjectDir(): string
     {
@@ -92,44 +152,66 @@ class Kernel extends BaseKernel implements KernelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getCacheDir(): string
+    public function getRootDir(): string
     {
-        return $this->serverBag->get(static::SERVER_CACHE_DIR, parent::getCacheDir());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogDir(): string
-    {
-        return $this->serverBag->get(static::SERVER_LOG_DIR, parent::getLogDir());
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param LoaderInterface $loader
-     * @throws \Exception
-     */
-    private function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
-    {
-        $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', true);
-        $confDir = $this->getProjectDir() . '/config';
-
-        $loader->load($confDir . '/app.yml');
-
-        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+        return $this->getProjectDir();
     }
 
     /**
      * {@inheritDoc}
      */
-    private function configureRoutes(RouteCollectionBuilder $routes): void
+    public function getContainer(): ContainerInterface
     {
+        return $this->booter->getContainer();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function registerContainerConfiguration(LoaderInterface $loader): void
+    {
+        $this->configurationLoader->loadConfig($loader);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStartTime()
+    {
+        // TODO: Implement getStartTime() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCacheDir(): string
+    {
+        return $this->getFromServerBag(
+            self::SERVER_CACHE_DIR,
+            $this->getProjectDir() . '/var/cache'
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLogDir()
+    {
+        return $this->getFromServerBag(
+            self::SERVER_LOG_DIR,
+            $this->getProjectDir() . '/var/logs'
+        );
+    }
+
+    /**
+     * @param string $key
+     * @param null $defaultValue
+     * @return string
+     */
+    private function getFromServerBag(string $key, $defaultValue = null): ?string
+    {
+        return $this->environment->getServerBag()->get($key, $defaultValue);
     }
 }

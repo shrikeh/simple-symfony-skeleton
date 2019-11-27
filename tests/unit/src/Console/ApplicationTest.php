@@ -16,16 +16,15 @@ use Tests\Mock\Console\Command\NullCommand;
 
 final class ApplicationTest extends KernelTestCase
 {
+    private const COMMAND_NAME = 'test_command';
+
     public function testItUsesTheInjectedOutput(): void
     {
-        $commandName = 'test_command';
-        $input = new StringInput($commandName);
-        $input->setInteractive(false);
         $output = new NullOutput();
 
         $application = $this->getApplication(static::createKernel());
-
-        $command = new NullCommand($commandName);
+        $input = $this->getInput();
+        $command = new NullCommand(static::COMMAND_NAME);
 
         $application->add($command);
         $application->run($input, $output);
@@ -39,18 +38,15 @@ final class ApplicationTest extends KernelTestCase
      */
     public function testItUsesTheOutputFromTheContainerIfNoneIsInjected(): void
     {
-        $commandName = 'test_command';
-        $input = new StringInput($commandName);
-        $input->setInteractive(false);
         $kernel = static::createKernel();
 
         $this->assertFalse($kernel->isBooted());
 
         $application = $this->getApplication($kernel);
 
-        $command = new NullCommand($commandName);
+        $command = new NullCommand(static::COMMAND_NAME);
         $application->add($command);
-        $application->run($input);
+        $application->run($this->getInput());
 
         $this->assertTrue($kernel->isBooted());
 
@@ -80,5 +76,16 @@ final class ApplicationTest extends KernelTestCase
         $application->setAutoExit(false);
 
         return $application;
+    }
+
+    /**
+     * @return StringInput
+     */
+    private function getInput(): StringInput
+    {
+        $input = new StringInput(static::COMMAND_NAME);
+        $input->setInteractive(false);
+
+        return $input;
     }
 }

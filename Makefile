@@ -9,12 +9,12 @@ endif
 vagrant-rebuild:
 	vagrant halt
 	vagrant destroy -f
-	vagrant u[
-run: build-docker
-	docker-compose up
+	vagrant up
+run:
+	docker-compose --build up
 
 build-docker: down
-	docker-compose build
+	docker-compose build --parallel
 
 down:
 	docker-compose down

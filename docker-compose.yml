@@ -9,6 +9,12 @@ services:
     networks:
       - amqp_consumers
       - amqp_senders
+  infection:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/infection/Dockerfile
+    volumes:
+      - .:/code
   phpunit:
     build:
       context: ./
@@ -16,7 +22,7 @@ services:
     environment:
       PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
     volumes:
-      - .:/phpunit
+      - .:/code
       - type: tmpfs
         target: /cache
   security-check:

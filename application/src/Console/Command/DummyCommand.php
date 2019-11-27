@@ -18,7 +18,7 @@ use Throwable;
 
 final class DummyCommand extends Command
 {
-    public const NAME = 'shrikeh:test';
+    public const NAME = 'shrikeh:dummy';
 
     public const DEFAULT_TEST_MESSAGE = 'we are here';
 

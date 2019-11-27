@@ -17,6 +17,14 @@ final class Application extends SymfonyApplication
     private ContainerInterface $container;
 
     /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return $this->getKernel()->isDebug();
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function run(InputInterface $input = null, OutputInterface $output = null): int

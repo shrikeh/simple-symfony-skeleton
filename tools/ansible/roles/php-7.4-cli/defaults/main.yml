@@ -1,0 +1,3 @@
+---
+php74_cli_conf_folder: '/etc/php/7.4/cli/conf.d/'
+php74_cli_ds_ini_path: "{{ php74_cli_conf_folder }}/21-ds.ini" # After json, as it requires the extension

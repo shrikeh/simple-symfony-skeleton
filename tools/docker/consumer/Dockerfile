@@ -17,6 +17,7 @@ RUN php /bin/composer.phar install ${COMPOSER_BUILD} --classmap-authoritative
 
 FROM php:${PHP_TAG} as consumer
 
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 ENV APP_ENV dev
 RUN apk add rabbitmq-c rabbitmq-c-dev
 
