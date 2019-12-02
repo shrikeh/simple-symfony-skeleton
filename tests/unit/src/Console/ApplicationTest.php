@@ -5,24 +5,29 @@ declare(strict_types=1);
 namespace Tests\Unit\App\Console;
 
 use App\Console\Application;
-use App\Kernel;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Kernel\Environment\EnvironmentInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Doubler\DoubleInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpFoundation\ServerBag;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tests\Mock\Console\Command\NullCommand;
 
-final class ApplicationTest extends KernelTestCase
+final class ApplicationTest extends TestCase
 {
     private const COMMAND_NAME = 'test_command';
 
-    public function testItUsesTheInjectedOutput(): void
+    public function testItUsesTheInjectedInputAndOutput(): void
     {
+        $container = $this->getContainerDouble();
+        $kernel = $this->getKernelDouble($container);
         $output = new NullOutput();
+        $application = $this->getApplication($kernel->reveal());
 
-        $application = $this->getApplication(static::createKernel());
         $input = $this->getInput();
         $command = new NullCommand(static::COMMAND_NAME);
 
@@ -38,32 +43,44 @@ final class ApplicationTest extends KernelTestCase
      */
     public function testItUsesTheOutputFromTheContainerIfNoneIsInjected(): void
     {
-        $kernel = static::createKernel();
+        $output = $this->prophesize(OutputInterface::class)->reveal();
+        $container = $this->getContainerDouble();
+        $container->has(OutputInterface::class)->willReturn(true);
 
-        $this->assertFalse($kernel->isBooted());
 
-        $application = $this->getApplication($kernel);
+        $container->get(OutputInterface::class)->will(function() use ($output) {
+            return $output;
+        });
+
+        $kernel = $this->getKernelDouble($container);
+
+        $application = $this->getApplication($kernel->reveal());
 
         $command = new NullCommand(static::COMMAND_NAME);
         $application->add($command);
         $application->run($this->getInput());
 
-        $this->assertTrue($kernel->isBooted());
 
         $this->assertSame(
-            $kernel->getContainer()->get(OutputInterface::class),
+            $output,
             $command->getOutput()
         );
     }
 
-    /**
-     * @param array $options
-     * @return Kernel
-     */
-    protected static function createKernel(array $options = []): Kernel
+    public function testItReturnsTheKernelDebugMode(): void
     {
-        return Kernel::fromServerBag(new ServerBag($_SERVER));
+        $container = $this->getContainerDouble();
+        $kernel = $this->getKernelDouble($container);
+
+        $kernel->isDebug()->willReturn(false, true);
+        $kernel->boot()->shouldNotBeCalled();
+
+        $application = $this->getApplication($kernel->reveal());
+
+        $this->assertSame(false, $application->isDebug());
+        $this->assertSame(true, $application->isDebug());
     }
+
 
     /**
      * @param KernelInterface $kernel
@@ -87,5 +104,40 @@ final class ApplicationTest extends KernelTestCase
         $input->setInteractive(false);
 
         return $input;
+    }
+
+    /**
+     * @param $container
+     * @return ObjectProphecy
+     */
+    private function getKernelDouble($container): ObjectProphecy
+    {
+        $kernel = $this->prophesize(KernelInterface::class);
+        $kernel->getEnvironment()->willReturn(EnvironmentInterface::ENV_TEST);
+        $kernel->getBundles()->willReturn([]);
+        $kernel->boot()->shouldBeCalled();
+
+        $kernel->getContainer()->will(function() use ($container) {
+            return $container->reveal();
+        });
+
+        return $kernel;
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    private function getContainerDouble(): ObjectProphecy
+    {
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $container = $this->prophesize(ContainerInterface::class);
+
+        $container->has('console.command_loader')->willReturn(false);
+        $container->hasParameter('console.command.ids')->willReturn(false);
+        $container->get('event_dispatcher')->will(function() use ($eventDispatcher) {
+            return $eventDispatcher->reveal();
+        });
+
+        return $container;
     }
 }

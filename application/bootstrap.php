@@ -6,6 +6,8 @@ use App\Kernel\Environment\EnvironmentInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+define('PROJECT_DIR', __DIR__);
+
 $_SERVER += $_ENV;
 $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: EnvironmentInterface::ENV_DEV;
 $_SERVER['APP_DEBUG'] = $_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? 'prod' !== $_SERVER['APP_ENV'];

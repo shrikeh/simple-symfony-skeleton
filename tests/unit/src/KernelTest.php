@@ -5,21 +5,31 @@ declare(strict_types=1);
 namespace Tests\Unit\App;
 
 use App\Kernel;
-
 use App\Kernel\Booter\BooterInterface;
 use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
 use App\Kernel\Environment\EnvironmentInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ServerBag;
 
 final class KernelTest extends TestCase
 {
-    public function testItReturnsTheCorrectBootedState(): void
+    /**
+     * @test
+     */
+    public function itReturnsTheCorrectBootedState(): void
     {
         $environment = $this->prophesize(EnvironmentInterface::class);
         $booter = $this->prophesize(BooterInterface::class);
         $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $booter->isBooted()->willReturn(false);
+
+        $booter->boot(Argument::type(Kernel::class))->will(function() use ($booter) {
+            $booter->isBooted()->willReturn(true);
+        });
 
         $kernel = new Kernel(
             $environment->reveal(),
@@ -33,7 +43,32 @@ final class KernelTest extends TestCase
         $booter->boot($kernel)->shouldHaveBeenCalled();
     }
 
-    public function testItUsesTheCacheDirFromTheServer(): void
+    /**
+     * @test
+     */
+    public function itRegistersConfigurationWithTheConfigLoader(): void
+    {
+        /** @var EnvironmentInterface $environment */
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $loader = $this->prophesize(LoaderInterface::class);
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $configurationLoader->loadConfig($loader)->shouldBeCalled();
+
+        $kernel->registerContainerConfiguration($loader->reveal());
+    }
+
+    /**
+     * @test
+     */
+    public function itUsesTheCacheDirFromTheServerBag(): void
     {
         $cacheDir = 'foo';
         $serverBag = new ServerBag([Kernel::SERVER_CACHE_DIR => $cacheDir]);
@@ -54,7 +89,10 @@ final class KernelTest extends TestCase
         $this->assertSame($cacheDir, $kernel->getCacheDir());
     }
 
-    public function testItUsesTheLogDirFromTheServer(): void
+    /**
+     * @test
+     */
+    public function itUsesTheLogDirFromTheServerBag(): void
     {
         $logDir = 'bar';
         $serverBag = new ServerBag([Kernel::SERVER_LOG_DIR => $logDir]);
@@ -74,12 +112,33 @@ final class KernelTest extends TestCase
         $this->assertSame($logDir, $kernel->getLogDir());
     }
 
-    public function testItUsesTheInjectedDebugMode(): void
+    /**
+     * @test
+     */
+    public function itReturnsTheProjectDir(): void
     {
         $environment = $this->prophesize(EnvironmentInterface::class);
         $booter = $this->prophesize(BooterInterface::class);
         $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
-        /** @var EnvironmentInterface $environment */
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $this->assertSame(PROJECT_DIR, $kernel->getProjectDir());
+    }
+
+    /**
+     * @test
+     */
+    public function itUsesTheInjectedDebugMode(): void
+    {
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
         $environment->isDebug()->willReturn(true, false);
 
         $kernel = new Kernel(
@@ -92,7 +151,52 @@ final class KernelTest extends TestCase
         $this->assertFalse($kernel->isDebug());
     }
 
-    public function testItLoadsTheContainerFromTheBooter(): void
+    /**
+     * @test
+     */
+    public function itDoesNotShutdownTheBooterIfItHasNotBooted(): void
+    {
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $booter->isBooted()->willReturn(false);
+        $booter->shutdown()->shouldNotBeCalled();
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $kernel->shutdown();
+    }
+
+    /**
+     * @test
+     */
+    public function itShutsDownTheBooterIfItHasBooted(): void
+    {
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $booter->isBooted()->willReturn(true);
+        $booter->shutdown()->shouldBeCalled();
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $kernel->shutdown();
+    }
+
+    /**
+     * @test
+     */
+    public function itLoadsTheContainerFromTheBooter(): void
     {
         $environment = $this->prophesize(EnvironmentInterface::class);
         $booter = $this->prophesize(BooterInterface::class);
@@ -114,5 +218,25 @@ final class KernelTest extends TestCase
 
 
         $this->assertSame($kernel->getContainer(), $containerProphet);
+    }
+
+    /**
+     * @test
+     */
+    public function itUsesTheEnvironmentName(): void
+    {
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $environment->getName()->willReturn(EnvironmentInterface::ENV_TEST);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $this->assertSame(EnvironmentInterface::ENV_TEST, $kernel->getEnvironment());
     }
 }

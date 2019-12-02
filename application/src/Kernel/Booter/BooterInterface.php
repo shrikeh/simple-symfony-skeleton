@@ -15,6 +15,11 @@ interface BooterInterface
     public function shutdown(): void;
 
     /**
+     * @return bool
+     */
+    public function isBooted(): bool;
+
+    /**
      * Boot the bundles and container
      * @param KernelInterface $kernel
      */

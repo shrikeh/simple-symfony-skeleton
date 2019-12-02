@@ -75,7 +75,7 @@ final class Booter implements BooterInterface
 
 
     /**
-     * @param KernelInterface $kernel
+     * {@inheritdoc}
      */
     public function boot(KernelInterface $kernel): void
     {
@@ -92,7 +92,7 @@ final class Booter implements BooterInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isBooted(): bool
     {

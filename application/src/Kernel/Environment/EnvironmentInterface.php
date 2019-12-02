@@ -30,7 +30,7 @@ interface EnvironmentInterface
     /**
      * @return string
      */
-    public function getEnvironmentName(): string;
+    public function getName(): string;
 
     /**
      * @return string

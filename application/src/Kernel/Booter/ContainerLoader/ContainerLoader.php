@@ -201,7 +201,7 @@ final class ContainerLoader implements ContainerLoaderInterface
              */
             'kernel.root_dir' => $kernel->getProjectDir(),
             'kernel.project_dir' => $kernel->getProjectDir(),
-            'kernel.environment' => $this->environment->getEnvironmentName(),
+            'kernel.environment' => $this->environment->getName(),
             'kernel.debug' => $this->environment->isDebug(),
             /*
              * @deprecated since Symfony 4.2
@@ -237,7 +237,7 @@ final class ContainerLoader implements ContainerLoaderInterface
     {
         $class = \get_class($kernel);
         $class = 0 === strpos($class, 'c') && 0 === strpos($class, "class@anonymous\0") ? get_parent_class($class) . str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
-        $envName = $this->environment->getEnvironmentName();
+        $envName = $this->environment->getName();
         $debug = $this->environment->isDebug();
 
         $class = $kernel->getName() . str_replace('\\', '_', $class) . ucfirst($envName) . ($debug ? 'Debug' : '') . 'Container';

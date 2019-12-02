@@ -10,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 final class DummyMessageTest extends TestCase
 {
-    public function testItReturnsTheDummyMessage(): void
+    /**
+     * @test
+     */
+    public function itReturnsTheDummyMessage(): void
     {
         $string = 'baz bar boo';
         $dummyMessage = new DummyMessage($string);
@@ -18,7 +21,10 @@ final class DummyMessageTest extends TestCase
         $this->assertSame($string, $dummyMessage->getDummyMessage());
     }
 
-    public function testIsJsonSerializable(): void
+    /**
+     * @test
+     */
+    public function itIsJsonSerializable(): void
     {
         $string = 'foo bar baz';
         $dummyMessage = new DummyMessage($string);

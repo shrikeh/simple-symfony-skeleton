@@ -92,6 +92,10 @@ final class Kernel implements KernelInterface
      */
     public function shutdown(): void
     {
+        if (!$this->booter->isBooted()) {
+            return;
+        }
+
         $this->booter->shutdown();
     }
 
@@ -132,7 +136,7 @@ final class Kernel implements KernelInterface
      */
     public function getEnvironment(): string
     {
-        return $this->environment->getEnvironmentName();
+        return $this->environment->getName();
     }
 
     /**
@@ -169,6 +173,7 @@ final class Kernel implements KernelInterface
 
     /**
      * {@inheritDoc}
+     * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {

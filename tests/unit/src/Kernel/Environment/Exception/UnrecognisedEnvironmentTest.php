@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\App\Kernel\Exception;
+namespace Tests\Unit\App\Kernel\Environment\Exception;
 
-use App\Kernel\Exception\UnrecognisedEnvironment;
+use App\Kernel\Environment\Exception\UnrecognisedEnvironment;
 use PHPUnit\Framework\TestCase;
 
 final class UnrecognisedEnvironmentTest extends TestCase

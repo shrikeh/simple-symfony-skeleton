@@ -65,7 +65,7 @@ final class FileConfigurationLoader implements ConfigurationLoaderInterface
      */
     private function getConfigGlobs(): Generator
     {
-        $environment = $this->environment->getEnvironmentName();
+        $environment = $this->environment->getName();
 
         yield sprintf('%s/{packages}/*%s', $this->configDir, self::CONFIG_EXTS);
         yield sprintf('%s/{packages}/%s/**/*/%s', $this->configDir, $environment, self::CONFIG_EXTS);

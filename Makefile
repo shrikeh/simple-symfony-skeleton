@@ -19,7 +19,7 @@ build-docker: down
 down:
 	docker-compose down
 infection:
-	./vendor/bin/infection
+	./vendor/bin/infection --debug -j2 --coverage=build/coverage
 
 phpunit:
 	./tools/bin/phpunit.sh

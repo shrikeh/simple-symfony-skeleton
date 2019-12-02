@@ -64,7 +64,7 @@ final class Environment implements EnvironmentInterface
      * @param string $environment
      * @param bool $debug
      */
-    public function __construct(ServerBag $serverBag, string $environment, bool $debug = false)
+    public function __construct(ServerBag $serverBag, string $environment, bool $debug)
     {
         if (!in_array($environment, static::ALLOWED_ENVS, true)) {
             throw UnrecognisedEnvironment::create($environment);
@@ -79,13 +79,13 @@ final class Environment implements EnvironmentInterface
      */
     public function __toString(): string
     {
-        return $this->getEnvironmentName();
+        return $this->getName();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getEnvironmentName(): string
+    public function getName(): string
     {
         return $this->environment;
     }
