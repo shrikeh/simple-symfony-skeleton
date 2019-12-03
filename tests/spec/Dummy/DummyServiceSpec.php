@@ -1,16 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace spec\Shrikeh\TestSymfonyApp\Dummy;
 
-use Shrikeh\TestSymfonyApp\Dummy\DummyService;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Shrikeh\TestSymfonyApp\Dummy\DummyService;
 
-class DummyServiceSpec extends ObjectBehavior
+final class DummyServiceSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initalisable(): void
     {
         $this->shouldHaveType(DummyService::class);
+    }
+
+    public function it_returns_the_dummy_msg(): void
+    {
+        $dummyMsg = 'foo bar baz';
+        $this->dummyMessage($dummyMsg)->shouldReturn($dummyMsg);
     }
 }

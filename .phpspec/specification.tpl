@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace %namespace%;
@@ -7,9 +8,9 @@ use %subject%;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class %name% extends ObjectBehavior
+final class %name% extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(%subject_class%::class);
     }
