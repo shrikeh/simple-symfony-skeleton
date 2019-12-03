@@ -22,8 +22,9 @@ interface BooterInterface
     /**
      * Boot the bundles and container
      * @param KernelInterface $kernel
+     * @param bool $reboot
      */
-    public function boot(KernelInterface $kernel): void;
+    public function boot(KernelInterface $kernel, bool $reboot = false): void;
 
     /**
      * @return ContainerInterface

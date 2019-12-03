@@ -12,7 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DummyHandlerTest extends TestCase
 {
-    public function testItHandlesADummyMessage(): void
+    /**
+     * @test
+     */
+    public function itHandlesADummyMessage(): void
     {
         $string = 'this is a test message';
         $dummyMessage = new DummyMessage($string);

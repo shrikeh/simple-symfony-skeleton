@@ -1,4 +1,4 @@
 #!/usr/bin/env php
 <?php
 // Use plain PHP file, easier for IDEs and code quality checking, etc
-require_once dirname(__DIR__).'/console.php';
+require_once dirname(__DIR__).'/cli/console.php';

@@ -10,7 +10,6 @@ interface ConfigurationLoaderInterface
 {
     /**
      * @param LoaderInterface $loader
-     * @throws \Exception
      */
     public function loadConfig(LoaderInterface $loader): void;
 }

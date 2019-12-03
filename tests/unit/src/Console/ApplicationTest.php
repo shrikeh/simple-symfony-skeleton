@@ -7,7 +7,6 @@ namespace Tests\Unit\App\Console;
 use App\Console\Application;
 use App\Kernel\Environment\EnvironmentInterface;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Doubler\DoubleInterface;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -21,10 +20,15 @@ final class ApplicationTest extends TestCase
 {
     private const COMMAND_NAME = 'test_command';
 
-    public function testItUsesTheInjectedInputAndOutput(): void
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function itUsesTheInjectedInputAndOutput(): void
     {
         $container = $this->getContainerDouble();
         $kernel = $this->getKernelDouble($container);
+        $kernel->boot()->shouldBeCalledTimes(1);
         $output = new NullOutput();
         $application = $this->getApplication($kernel->reveal());
 
@@ -38,21 +42,23 @@ final class ApplicationTest extends TestCase
         $this->assertSame($output, $command->getOutput());
     }
 
+
     /**
-     * @covers \App\Kernel::boot()
+     * @test
      */
-    public function testItUsesTheOutputFromTheContainerIfNoneIsInjected(): void
+    public function itUsesTheOutputFromTheContainerIfNoneIsInjected(): void
     {
         $output = $this->prophesize(OutputInterface::class)->reveal();
         $container = $this->getContainerDouble();
         $container->has(OutputInterface::class)->willReturn(true);
 
 
-        $container->get(OutputInterface::class)->will(function() use ($output) {
+        $container->get(OutputInterface::class)->will(function () use ($output) {
             return $output;
         });
 
         $kernel = $this->getKernelDouble($container);
+        $kernel->boot()->shouldBeCalledTimes(2);
 
         $application = $this->getApplication($kernel->reveal());
 
@@ -115,10 +121,9 @@ final class ApplicationTest extends TestCase
         $kernel = $this->prophesize(KernelInterface::class);
         $kernel->getEnvironment()->willReturn(EnvironmentInterface::ENV_TEST);
         $kernel->getBundles()->willReturn([]);
-        $kernel->boot()->shouldBeCalled();
 
-        $kernel->getContainer()->will(function() use ($container) {
-            return $container->reveal();
+        $kernel->boot()->will(function () use ($kernel, $container) {
+            $kernel->getContainer()->willReturn($container->reveal());
         });
 
         return $kernel;
@@ -134,7 +139,7 @@ final class ApplicationTest extends TestCase
 
         $container->has('console.command_loader')->willReturn(false);
         $container->hasParameter('console.command.ids')->willReturn(false);
-        $container->get('event_dispatcher')->will(function() use ($eventDispatcher) {
+        $container->get('event_dispatcher')->will(function () use ($eventDispatcher) {
             return $eventDispatcher->reveal();
         });
 

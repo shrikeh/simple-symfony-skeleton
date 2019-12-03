@@ -6,6 +6,7 @@ namespace App\Kernel\Booter;
 
 use App\Kernel\Booter\BundleLoader\BundlerLoaderInterface;
 use App\Kernel\Booter\ContainerLoader\ContainerLoaderInterface;
+use App\Kernel\Booter\Exception\ContainerFetchedWhileUnbooted;
 use App\Kernel\Environment\EnvironmentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -77,17 +78,18 @@ final class Booter implements BooterInterface
     /**
      * {@inheritdoc}
      */
-    public function boot(KernelInterface $kernel): void
+    public function boot(KernelInterface $kernel, bool $reboot = false): void
     {
-        $this->booted = true;
-        $this->environment->setDebugShellVerbosity();
-        $this->initialiseBundles();
+        if ($reboot || !$this->isBooted()) {
+            $this->booted = true;
+            $this->environment->setDebugShellVerbosity();
 
-        $this->container = $this->initialiseContainer($kernel);
+            $this->container = $this->initialiseContainer($kernel);
 
-        foreach ($this->getBundles() as $bundle) {
-            $bundle->setContainer($this->container);
-            $bundle->boot();
+            foreach ($this->getBundles() as $bundle) {
+                $bundle->setContainer($this->container);
+                $bundle->boot();
+            }
         }
     }
 
@@ -101,22 +103,15 @@ final class Booter implements BooterInterface
 
     /**
      * @return ContainerInterface
+     * @throws ContainerFetchedWhileUnbooted If unbooted
      */
     public function getContainer(): ContainerInterface
     {
         if (!$this->isBooted()) {
-            throw new \RuntimeException('Why u no boot?');
+            throw ContainerFetchedWhileUnbooted::create();
         }
 
         return $this->container;
-    }
-
-    /**
-     * @return iterable
-     */
-    private function initialiseBundles(): iterable
-    {
-        yield from $this->bundlerLoader->getBundles();
     }
 
     /**

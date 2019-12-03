@@ -14,6 +14,7 @@ final class Environment implements EnvironmentInterface
     public const SERVER_APP_ENV = 'APP_ENV';
     public const SERVER_APP_DEBUG = 'APP_DEBUG';
 
+    public const KEY_SHELL_VERBOSITY = 'SHELL_VERBOSITY';
     public const SHELL_VERBOSITY_LEVEL = 3;
 
     /**
@@ -119,8 +120,8 @@ final class Environment implements EnvironmentInterface
      */
     public function setDebugShellVerbosity(): void
     {
-        if (!$this->isDebug()) {
-            if (!isset($_ENV['SHELL_VERBOSITY']) && !isset($_SERVER['SHELL_VERBOSITY'])) {
+        if ($this->isDebug()) {
+            if (!isset($_ENV[self::KEY_SHELL_VERBOSITY]) && !isset($_SERVER[self::KEY_SHELL_VERBOSITY])) {
                 $this->setShellVerbosityLevel(static::SHELL_VERBOSITY_LEVEL);
             }
         }
@@ -131,8 +132,8 @@ final class Environment implements EnvironmentInterface
      */
     private function setShellVerbosityLevel(int $level): void
     {
-        putenv(sprintf('SHELL_VERBOSITY=%d', $level));
-        $_ENV['SHELL_VERBOSITY'] = $level;
-        $_SERVER['SHELL_VERBOSITY'] = $level;
+        putenv(sprintf('%s=%d', self::KEY_SHELL_VERBOSITY, $level));
+        $_ENV[self::KEY_SHELL_VERBOSITY] = $level;
+        $_SERVER[self::KEY_SHELL_VERBOSITY] = $level;
     }
 }

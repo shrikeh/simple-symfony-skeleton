@@ -7,6 +7,7 @@ namespace Tests\Unit\App\Kernel\Booter;
 use App\Kernel\Booter\Booter;
 use App\Kernel\Booter\BundleLoader\BundlerLoaderInterface;
 use App\Kernel\Booter\ContainerLoader\ContainerLoaderInterface;
+use App\Kernel\Booter\Exception\ContainerFetchedWhileUnbooted;
 use App\Kernel\Environment\Environment;
 use App\Kernel\Environment\EnvironmentInterface;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ final class BooterTest extends TestCase
     /**
      * @test
      */
-    public function itDoesNotShutsdownIfItHasNotBeenBooted(): void
+    public function itDoesNotShutdownIfItHasNotBeenBooted(): void
     {
         $bundlerLoader = $this->prophesize(BundlerLoaderInterface::class);
         $containerLoader = $this->prophesize(ContainerLoaderInterface::class);
@@ -56,16 +57,17 @@ final class BooterTest extends TestCase
 
         $bundlerLoader->getBundles()->willReturn([$testBundle->reveal()]);
 
-        $testBundle->boot()->shouldBeCalled();
-        $testBundle->setContainer($container)->shouldBeCalled();
+        $testBundle->boot()->shouldBeCalledTimes(1);
+        $testBundle->setContainer($container)->shouldBeCalledTimes(1);
 
         $booter = new Booter(
             $bundlerLoader->reveal(),
             $containerLoader->reveal(),
             $environment
         );
-
-        $booter->boot($kernel->reveal());
+        $kernel = $kernel->reveal();
+        $booter->boot($kernel);
+        $booter->boot($kernel);  // should have no effect as already booted
         $this->assertTrue($booter->isBooted());
 
         $testBundle->setContainer(null)->shouldBeCalled();
@@ -73,6 +75,26 @@ final class BooterTest extends TestCase
 
         $booter->shutdown();
         $this->assertFalse($booter->isBooted());
+    }
+
+    /**
+     * @test
+     */
+    public function itThrowsAnExceptionIfTheContainerIsFetchedBeforeBooting(): void
+    {
+        $bundlerLoader = $this->prophesize(BundlerLoaderInterface::class);
+        $containerLoader = $this->prophesize(ContainerLoaderInterface::class);
+        $environment = Environment::create(Environment::ENV_TEST);
+
+        $booter = new Booter(
+            $bundlerLoader->reveal(),
+            $containerLoader->reveal(),
+            $environment
+        );
+
+        $this->expectException(ContainerFetchedWhileUnbooted::class);
+
+        $booter->getContainer();
     }
 
     /**

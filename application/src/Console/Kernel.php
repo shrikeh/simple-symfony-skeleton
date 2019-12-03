@@ -2,34 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Console;
 
+use App\Console\Exception\HandleMethodNotImplemented;
 use App\Kernel\Booter\BooterInterface;
 use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
 use App\Kernel\Environment\EnvironmentInterface;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\Kernel\Traits\BooterTrait;
+use App\Kernel\Traits\ConfigurationLoaderTrait;
+use App\Kernel\Traits\EnvironmentTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 final class Kernel implements KernelInterface
 {
+    use BooterTrait;
+    use ConfigurationLoaderTrait;
+    use EnvironmentTrait;
+
     public const SERVER_CACHE_DIR = 'SYMFONY_CACHE_DIR';
     public const SERVER_LOG_DIR = 'SYMFONY_LOG_DIR';
-
-    /**
-     * @var EnvironmentInterface
-     */
-    private EnvironmentInterface $environment;
-    /**
-     * @var BooterInterface
-     */
-    private BooterInterface $booter;
-    /**
-     * @var ConfigurationLoaderInterface
-     */
-    private ConfigurationLoaderInterface $configurationLoader;
 
     /**
      * Kernel constructor.
@@ -48,63 +41,14 @@ final class Kernel implements KernelInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isBooted(): bool
-    {
-        return $this->booter->isBooted();
-    }
-
-    /**
+     * As this is a console command, this is not a valid use case, so we throw an exception.
      * {@inheritDoc}
-     */
-    public function getCharset(): string
-    {
-        return $this->environment->getCharset();
-    }
-
-    /**
-     * {@inheritDoc}
+     * @codeCoverageIgnore
+     * @throws HandleMethodNotImplemented
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        // TODO: Implement handle() method.
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function registerBundles(): iterable
-    {
-        return $this->booter->getBundles();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function boot(): void
-    {
-        $this->booter->boot($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function shutdown(): void
-    {
-        if (!$this->booter->isBooted()) {
-            return;
-        }
-
-        $this->booter->shutdown();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBundles(): iterable
-    {
-        return $this->booter->getBundles();
+        throw HandleMethodNotImplemented::create();
     }
 
     /**
@@ -131,28 +75,14 @@ final class Kernel implements KernelInterface
         // TODO: Implement getName() method.
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getEnvironment(): string
-    {
-        return $this->environment->getName();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isDebug(): bool
-    {
-        return $this->environment->isDebug();
-    }
 
     /**
      * @return string
      */
     public function getProjectDir(): string
     {
-        return dirname(__DIR__);
+        return dirname(__DIR__, 2);
     }
 
     /**
@@ -161,23 +91,6 @@ final class Kernel implements KernelInterface
     public function getRootDir(): string
     {
         return $this->getProjectDir();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getContainer(): ContainerInterface
-    {
-        return $this->booter->getContainer();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws \Exception
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader): void
-    {
-        $this->configurationLoader->loadConfig($loader);
     }
 
     /**
@@ -208,15 +121,5 @@ final class Kernel implements KernelInterface
             self::SERVER_LOG_DIR,
             $this->getProjectDir() . '/var/logs'
         );
-    }
-
-    /**
-     * @param string $key
-     * @param null $defaultValue
-     * @return string
-     */
-    private function getFromServerBag(string $key, $defaultValue = null): ?string
-    {
-        return $this->environment->getServerBag()->get($key, $defaultValue);
     }
 }

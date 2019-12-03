@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\App;
 
-use App\Kernel;
+use App\Console\Exception\HandleMethodNotImplemented;
+use App\Console\Kernel;
 use App\Kernel\Booter\BooterInterface;
 use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
 use App\Kernel\Environment\EnvironmentInterface;
@@ -12,10 +13,32 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ServerBag;
 
 final class KernelTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function itDoesNotImplementHttpExclusiveKernelMethods(): void
+    {
+        $environment = $this->prophesize(EnvironmentInterface::class);
+        $booter = $this->prophesize(BooterInterface::class);
+        $configurationLoader = $this->prophesize(ConfigurationLoaderInterface::class);
+
+        $kernel = new Kernel(
+            $environment->reveal(),
+            $booter->reveal(),
+            $configurationLoader->reveal()
+        );
+
+        $this->expectException(HandleMethodNotImplemented::class);
+
+        $kernel->handle(new Request());
+
+    }
+
     /**
      * @test
      */
@@ -27,7 +50,7 @@ final class KernelTest extends TestCase
 
         $booter->isBooted()->willReturn(false);
 
-        $booter->boot(Argument::type(Kernel::class))->will(function() use ($booter) {
+        $booter->boot(Argument::type(Kernel::class))->will(function () use ($booter) {
             $booter->isBooted()->willReturn(true);
         });
 

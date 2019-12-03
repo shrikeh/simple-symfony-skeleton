@@ -27,13 +27,11 @@
     <testsuites>
         <testsuite name="Unit Tests">
             <directory>tests/unit/src</directory>
-            <directory>tests/unit/lib</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">application/src</directory>
-            <directory suffix=".php">application/lib</directory>
         </whitelist>
     </filter>
 </phpunit>

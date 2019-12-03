@@ -13,9 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class Application extends SymfonyApplication
 {
-    /** @var ContainerInterface */
-    private ContainerInterface $container;
-
     /**
      * @return bool
      */
@@ -68,13 +65,9 @@ final class Application extends SymfonyApplication
      */
     private function getKernelContainer(): ContainerInterface
     {
-        if (!isset($this->container)) {
-            $kernel = $this->getKernel();
-            $kernel->boot();
+        $kernel = $this->getKernel();
+        $kernel->boot();
 
-            $this->container = $kernel->getContainer();
-        }
-
-        return $this->container;
+        return $kernel->getContainer();
     }
 }

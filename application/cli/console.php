@@ -7,7 +7,7 @@ use App\Kernel\Environment\Environment;
 use App\ServiceProvider\ConsoleProvider;
 use Symfony\Component\Console\Input\InputInterface;
 
-require_once __DIR__ . '/bootstrap.php';
+require_once dirname(__DIR__ ). '/bootstrap.php';
 
 if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . \PHP_SAPI . ' SAPI' . \PHP_EOL;

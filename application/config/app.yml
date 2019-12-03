@@ -11,6 +11,6 @@ services:
   # this creates a service per class whose id is the fully-qualified class name
   App\:
     resource: '%kernel.project_dir%/src/*'
-    exclude: '%kernel.project_dir%/src/{Kernel,DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+    exclude: '%kernel.project_dir%/src/{Kernel,DependencyInjection,Entity,Migrations}'
   Shrikeh\TestSymfonyApp\:
     resource: '%kernel.project_dir%/lib/*'
