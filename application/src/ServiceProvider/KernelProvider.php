@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\ServiceProvider;
 
 use App\Console\Application;
-use App\Kernel;
+use App\Console\Kernel;
 use App\Kernel\Booter\Booter;
 use App\Kernel\Booter\BooterInterface;
 use App\Kernel\Booter\BundleLoader\BundlerLoaderInterface;
@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 final class KernelProvider implements ServiceProviderInterface
 {
+    /** @var string  */
     public const KEY_CACHE_FILE = 'shrikeh.cache.path.file';
 
     /**

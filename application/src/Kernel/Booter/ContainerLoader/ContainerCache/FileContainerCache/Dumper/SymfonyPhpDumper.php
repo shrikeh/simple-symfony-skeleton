@@ -6,6 +6,7 @@ namespace App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Du
 
 use App\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
 use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\CachePath;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCacheFactoryInterface;
 use SplFileObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,16 +22,25 @@ final class SymfonyPhpDumper implements ContainerDumperInterface
 
     /** @var Filesystem */
     private FileSystem $fileSystem;
+    /**
+     * @var ConfigCacheFactoryInterface
+     */
+    private ConfigCacheFactoryInterface $configCacheFactory;
 
     /**
      * SymfonyPhpDumper constructor.
      * @param CachePath $cachePath
      * @param Filesystem $fileSystem
+     * @param ConfigCacheFactoryInterface $configCacheFactory
      */
-    public function __construct(CachePath $cachePath, Filesystem $fileSystem)
-    {
+    public function __construct(
+        CachePath $cachePath,
+        Filesystem $fileSystem,
+        ConfigCacheFactoryInterface $configCacheFactory
+    ) {
         $this->cachePath = $cachePath;
         $this->fileSystem = $fileSystem;
+        $this->configCacheFactory = $configCacheFactory;
     }
 
     /**
@@ -44,7 +54,7 @@ final class SymfonyPhpDumper implements ContainerDumperInterface
         }
 
         if ($lock = $this->getLock()) {
-            $cache = $this->createConfigCache($lock, $debug);
+            $cache = $this->configCacheFactory->create($lock, $debug);
 
             // cache the container
             $dumper = new PhpDumper($container);
@@ -102,16 +112,5 @@ final class SymfonyPhpDumper implements ContainerDumperInterface
         }
 
         return $lock;
-    }
-
-    /**
-     * @param SplFileObject $lock
-     * @param bool $debug
-     * @return AnonymousConfigCache
-     */
-    private function createConfigCache(SplFileObject $lock, bool $debug): AnonymousConfigCache
-    {
-        return new class ($lock, $this->fileSystem, $debug) extends AnonymousConfigCache {
-        };
     }
 }

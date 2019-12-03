@@ -10,8 +10,6 @@ use App\Kernel\Environment\EnvironmentInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use function is_object;
-
 final class FileContainerCache implements ContainerCacheInterface
 {
     /** @var CachePath  */

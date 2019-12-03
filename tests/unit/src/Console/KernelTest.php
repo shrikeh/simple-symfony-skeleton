@@ -36,7 +36,6 @@ final class KernelTest extends TestCase
         $this->expectException(HandleMethodNotImplemented::class);
 
         $kernel->handle(new Request());
-
     }
 
     /**
