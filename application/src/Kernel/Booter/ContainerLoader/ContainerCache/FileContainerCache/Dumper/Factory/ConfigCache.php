@@ -6,7 +6,7 @@ namespace App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Du
 
 use App\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
 use App\Kernel\Booter\ContainerLoader\ConfigCache\DebugConfigCache;
-use App\Kernel\Booter\ContainerLoader\ContainerCache\Invalidator\CacheInvalidatorInterface;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
 use SplFileObject;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;

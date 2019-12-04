@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Kernel\Booter\ContainerLoader\ErrorHandler;
 
 use Symfony\Component\ErrorHandler\DebugClassLoader;
-
 use function array_slice;
 use function count;
+use function debug_backtrace;
+use function restore_error_handler;
+use function set_error_handler;
 
 final class DeprecationsHandler
 {
@@ -22,13 +24,13 @@ final class DeprecationsHandler
     private array $collectedLogs = [];
 
     /**
-     * @param string $type
+     * @param int $type
      * @param string $message
      * @param string $file
      * @param int $line
      * @return bool|null
      */
-    public function __invoke(string $type, string $message, string $file, int $line): ?bool
+    public function __invoke(int $type, string $message, string $file, int $line): ?bool
     {
         if (E_USER_DEPRECATED !== $type && E_DEPRECATED !== $type) {
             $previousHandler = $this->previousErrorHandler;
@@ -49,6 +51,14 @@ final class DeprecationsHandler
         ];
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogs(): array
+    {
+        return $this->collectedLogs;
     }
 
     /**
@@ -99,13 +109,15 @@ final class DeprecationsHandler
      * @param string $message
      * @return bool|null
      */
-    private function addMessageToLog(string $message): ?bool
+    private function addMessageToLog(string $message): bool
     {
         if (isset($this->collectedLogs[$message])) {
             ++$this->collectedLogs[$message]['count'];
 
             return true;
         }
+
+        return false;
     }
 
     /**

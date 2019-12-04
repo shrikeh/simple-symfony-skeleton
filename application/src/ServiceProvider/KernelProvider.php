@@ -38,6 +38,7 @@ final class KernelProvider implements ServiceProviderInterface
 
     /**
      * {@inheritDoc}
+     * @codeCoverageIgnore
      */
     public function register(Container $p): void
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Kernel\Booter\ContainerLoader\ContainerCache\Invalidator;
+namespace App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator;
 
 interface CacheInvalidatorInterface
 {

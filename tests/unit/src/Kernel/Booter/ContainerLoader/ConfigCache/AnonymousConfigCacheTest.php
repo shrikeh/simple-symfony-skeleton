@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\App\Kernel\Booter\ContainerLoader\ConfigCache;
+
 use App\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use SplFileObject;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class AnonymousConfigCacheTest extends TestCase
@@ -14,6 +19,7 @@ final class AnonymousConfigCacheTest extends TestCase
     public function itReturnsTrueIfItIsFresh(): void
     {
         $lock = $this->prophesize(SplFileObject::class);
+        $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
         $filesystem = new Filesystem();
 
         $lock->isFile()->willReturn(true);
@@ -21,7 +27,8 @@ final class AnonymousConfigCacheTest extends TestCase
 
         $configCache = new class (
             $lock->reveal(),
-            $filesystem
+            $filesystem,
+            $invalidator->reveal()
         ) extends AnonymousConfigCache{
         };
 
@@ -34,6 +41,7 @@ final class AnonymousConfigCacheTest extends TestCase
     public function itIsNotFreshIfTheLockIsNotAFile(): void
     {
         $lock = $this->prophesize(SplFileObject::class);
+        $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
         $filesystem = new Filesystem();
 
         $lock->isFile()->willReturn(false);
@@ -42,28 +50,7 @@ final class AnonymousConfigCacheTest extends TestCase
         $configCache = new class (
             $lock->reveal(),
             $filesystem,
-            false
-        ) extends AnonymousConfigCache{
-        };
-
-        $this->assertFalse($configCache->isFresh());
-    }
-
-    /**
-     * @test
-     */
-    public function itIsNotFreshIfWeAreInDebugMode(): void
-    {
-        $lock = $this->prophesize(SplFileObject::class);
-        $filesystem = new Filesystem();
-
-        $lock->isFile()->willReturn(true);
-        $lock->flock(LOCK_UN)->shouldBeCalled();
-
-        $configCache = new class (
-            $lock->reveal(),
-            $filesystem,
-            true
+            $invalidator->reveal()
         ) extends AnonymousConfigCache{
         };
 
@@ -75,20 +62,69 @@ final class AnonymousConfigCacheTest extends TestCase
      */
     public function itWritesContentToTheLock(): void
     {
-        $lock = $this->prophesize(SplFileObject::class);
-        $filesystem = new Filesystem();
-
-        $lock->isFile()->willReturn(true);
-
+        $fakePath = '/not/real';
         $content = 'foo bar baz';
 
+        $lock = $this->prophesize(SplFileObject::class);
+        $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
+        $filesystem = new Filesystem();
+
+        $lock->getPath()->willReturn($fakePath);
+        $lock->rewind()->shouldBeCalled();
+        $lock->ftruncate(0)->shouldBeCalled();
+        $lock->fwrite($content)->shouldBeCalled();
         $lock->flock(LOCK_UN)->shouldBeCalled();
+
+        $invalidator->invalidate($fakePath)->shouldBeCalled();
 
         $configCache = new class (
             $lock->reveal(),
             $filesystem,
-            true
+            $invalidator->reveal()
         ) extends AnonymousConfigCache{
         };
+
+        $configCache->write($content);
+    }
+
+    /**
+     * @test
+     */
+    public function itWritesTheMetaData(): void
+    {
+        $fakePath = '/not/real';
+        $content = 'foo bar baz';
+
+        $lock = $this->prophesize(SplFileObject::class);
+        $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
+        $filesystem = $this->prophesize(Filesystem::class);
+
+        $lock->getPath()->willReturn($fakePath);
+        $lock->rewind()->shouldBeCalled();
+        $lock->ftruncate(0)->shouldBeCalled();
+        $lock->fwrite($content)->shouldBeCalled();
+        $lock->flock(LOCK_UN)->shouldBeCalled();
+
+        $invalidator->invalidate($fakePath)->shouldBeCalled();
+        $metaPath = sprintf('%s.meta', $fakePath);
+
+        $metaData = [
+            'foo' => 'bar',
+            'baz' => 'boo',
+        ];
+
+        $chmod = 0666 & ~umask();
+
+        $filesystem->dumpFile($metaPath, serialize($metaData))->shouldBeCalled();
+        $filesystem->chmod($metaPath, $chmod)->shouldBeCalled();
+
+        $configCache = new class (
+            $lock->reveal(),
+            $filesystem->reveal(),
+            $invalidator->reveal()
+        ) extends AnonymousConfigCache{
+        };
+
+        $configCache->write($content, $metaData);
     }
 }

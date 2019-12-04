@@ -52,6 +52,7 @@ final class ConsoleProvider implements ServiceProviderInterface
 
     /**
      * {@inheritDoc}
+     * @codeCoverageIgnore
      */
     public function register(Container $p): void
     {
