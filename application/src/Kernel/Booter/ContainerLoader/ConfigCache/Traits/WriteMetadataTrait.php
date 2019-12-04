@@ -16,7 +16,7 @@ trait WriteMetadataTrait
     /**
      * @param array $metaData
      */
-    protected function writeMetadata(array $metaData): void
+    private function writeMetadata(array $metaData): void
     {
         $metaFilePath = sprintf('%s.meta', $this->getPath());
         $this->filesystem->dumpFile($metaFilePath, serialize($metaData));

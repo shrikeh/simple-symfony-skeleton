@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\App\Kernel\Booter\ContainerLoader\ErrorHandler;
 
+use App\Deprecation\DeprecationsCollection;
 use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler;
+use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
+use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
 use PHPUnit\Framework\TestCase;
 use function restore_error_handler;
 use function set_error_handler;
@@ -19,7 +22,7 @@ final class DeprecationsHandlerTest extends TestCase
      */
     public function itRegistersItselfAsAnErrorHandler(): void
     {
-        $errorHandler = new DeprecationsHandler();
+        $errorHandler = DeprecationsHandler::create();
         $errorHandler->register();
 
         $this->assertSame($errorHandler, $this->getCurrentErrorHandler());
@@ -30,7 +33,7 @@ final class DeprecationsHandlerTest extends TestCase
      */
     public function itRestoresItselfAsAnErrorHandler(): void
     {
-        $errorHandler = new DeprecationsHandler();
+        $errorHandler = DeprecationsHandler::create();
         $errorHandler->register();
         $errorHandler->restore();
         $this->assertNotSame($errorHandler, $this->getCurrentErrorHandler());
@@ -41,8 +44,6 @@ final class DeprecationsHandlerTest extends TestCase
      */
     public function itAddsAMessageToTheLog(): void
     {
-        $errorHandler = new DeprecationsHandler();
-
         $msg = 'foo';
         $error = [
             'type' => E_USER_DEPRECATED,
@@ -52,9 +53,20 @@ final class DeprecationsHandlerTest extends TestCase
             'trace' => 'baz',
             'count' => 1,
         ];
-        call_user_func_array($errorHandler, $error);
 
-        $recordedErrors = $errorHandler->getLogs();
+        $deprecationsCollection = new DeprecationsCollection();
+        $backtraceCleaner = $this->prophesize(BacktraceCleanerInterface::class);
+
+        $backtraceCleaner->clean(4, 'bar')->shouldBeCalled();
+        $errorHandler = DeprecationsHandler::create(
+            $deprecationsCollection,
+            $backtraceCleaner->reveal()
+        );
+
+
+        $this->assertNull(call_user_func_array($errorHandler, $error));
+
+        $recordedErrors = iterator_to_array($deprecationsCollection->getDeprecations());
 
         $this->assertArrayHasKey($msg, $recordedErrors);
         $recordedError = $recordedErrors[$msg];
@@ -62,8 +74,6 @@ final class DeprecationsHandlerTest extends TestCase
         foreach(['type', 'message', 'file', 'line', 'count'] as $key) {
             $this->assertSame($error[$key], $recordedError[$key]);
         }
-        $backtrace = $recordedError['trace'][0];
-        $this->assertSame(TestCase::class, $backtrace['class']);
     }
 
     /**
@@ -71,7 +81,7 @@ final class DeprecationsHandlerTest extends TestCase
      */
     public function itDoesNotRegisterNonDeprecationErrors(): void
     {
-        $errorHandler = new DeprecationsHandler();
+        $errorHandler = DeprecationsHandler::create();
 
         $msg = 'foo';
         $error = [
@@ -82,9 +92,9 @@ final class DeprecationsHandlerTest extends TestCase
             'trace' => 'baz',
             'count' => 1,
         ];
-        call_user_func_array($errorHandler, $error);
+        $this->assertFalse(call_user_func_array($errorHandler, $error));
 
-        $this->assertArrayNotHasKey($msg, $errorHandler->getLogs());
+        $this->assertArrayNotHasKey($msg, iterator_to_array($errorHandler->getDeprecations()));
     }
 
     /**
@@ -113,5 +123,4 @@ final class DeprecationsHandlerTest extends TestCase
 
         return $errorHandler;
     }
-
 }
