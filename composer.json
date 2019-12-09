@@ -32,7 +32,8 @@
     "phpstan/phpstan": "^0.11.19",
     "phpstan/phpstan-symfony": "^0.11.6",
     "phpunit/phpunit": "^8.4",
-    "squizlabs/php_codesniffer": "^3.5"
+    "squizlabs/php_codesniffer": "^3.5",
+    "twig/twig": "^3.0"
   },
   "suggest": {
     "ext-ds":  "*",
@@ -49,7 +50,8 @@
       "Tests\\Behat\\": "tests/behat/src",
       "Tests\\Mock\\": "tests/mocks",
       "Tests\\Unit\\App\\": "tests/unit/src",
-      "Tests\\Spec\\": "tests/spec"
+      "Tests\\Spec\\": "tests/spec",
+      "Tests\\Utils\\": "tests/utils/src"
     }
   },
   "conflict": {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\App;
+namespace Tests\Unit\App\Console;
 
 use App\Console\Exception\HandleMethodNotImplemented;
 use App\Console\Kernel;

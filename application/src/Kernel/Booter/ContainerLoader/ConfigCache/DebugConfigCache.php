@@ -6,6 +6,7 @@ namespace App\Kernel\Booter\ContainerLoader\ConfigCache;
 
 use App\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteContentTrait;
 use App\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteMetadataTrait;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
 use SplFileObject;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\ResourceInterface;
@@ -17,17 +18,26 @@ final class DebugConfigCache implements ConfigCacheInterface
     use WriteMetadataTrait;
 
     /**
-     * DebugConfigCache constructor.
+     * @var CacheInvalidatorInterface
+     */
+    private CacheInvalidatorInterface $invalidator;
+
+    /**
+     * AnonymousConfigCache constructor.
      * @param SplFileObject $lock
      * @param Filesystem $filesystem
+     * @param CacheInvalidatorInterface $invalidator
      */
     public function __construct(
         SplFileObject $lock,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        CacheInvalidatorInterface $invalidator
     ) {
         $this->lock = $lock;
         $this->filesystem = $filesystem;
+        $this->invalidator = $invalidator;
     }
+
 
     /**
      * {@inheritDoc}
@@ -61,5 +71,6 @@ final class DebugConfigCache implements ConfigCacheInterface
     public function write($content, array $metadata = null)
     {
         $this->writeAll($content, $metadata);
+        $this->invalidator->invalidate($this->getPath());
     }
 }
