@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace spec\Tests\Utils\UnitTestBundle\TestCaseRenderer;
 
+use PhpSpec\ObjectBehavior;
 use SplFileInfo;
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\TestCase;
 use Tests\Utils\UnitTestBundle\TestCaseRenderer\TemplateData\TemplateDataInterface;
-use Tests\Utils\UnitTestBundle\TestCaseRenderer\TwigTestCaseRenderer;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use Twig\Environment;
 
 final class TwigTestCaseRendererSpec extends ObjectBehavior

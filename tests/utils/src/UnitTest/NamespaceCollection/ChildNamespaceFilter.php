@@ -6,13 +6,13 @@ namespace Tests\Utils\UnitTest\NamespaceCollection;
 
 use Tests\Utils\UnitTest\ClassNamespace;
 
-final class MatchingNamespaceFilter
+final class ChildNamespaceFilter
 {
     /** @var ClassNamespace */
     private ClassNamespace $childFqn;
 
     /**
-     * MatchingNamespaceFilter constructor.
+     * ChildNamespaceFilter constructor.
      * @param ClassNamespace $childFqn
      */
     public function __construct(ClassNamespace $childFqn)
@@ -22,10 +22,9 @@ final class MatchingNamespaceFilter
 
     /**
      * @param ClassNamespace $parentFqn
-     * @param $metadata
      * @return bool
      */
-    public function __invoke(ClassNamespace $parentFqn, $metadata): bool
+    public function __invoke(ClassNamespace $parentFqn): bool
     {
         return $this->childFqn->isChildOf($parentFqn);
     }

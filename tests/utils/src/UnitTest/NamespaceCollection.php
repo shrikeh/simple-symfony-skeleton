@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Utils\UnitTest;
 
 use Ds\Map;
-use Tests\Utils\UnitTest\NamespaceCollection\MatchingNamespaceFilter;
+use Tests\Utils\UnitTest\NamespaceCollection\ChildNamespaceFilter;
 use Tests\Utils\UnitTest\NamespaceCollection\NamespaceSort;
 
 final class NamespaceCollection
@@ -54,7 +54,7 @@ final class NamespaceCollection
      */
     private function getMatchingNamespaces(ClassNamespace $fqn): Map
     {
-        $matches =  $this->namespaces->filter(new MatchingNamespaceFilter($fqn));
+        $matches =  $this->namespaces->filter(new ChildNamespaceFilter($fqn));
         $matches->ksort(new NamespaceSort());
 
         return $matches;
