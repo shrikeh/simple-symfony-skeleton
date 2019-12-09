@@ -6,6 +6,7 @@ namespace Tests\Utils\UnitTest\Service;
 
 use SplFileInfo;
 use Tests\Utils\UnitTest\ClassNamespace;
+use Tests\Utils\UnitTest\Service\NamespaceMapper\NamespaceMapperInterface;
 use Tests\Utils\UnitTest\Service\Pathalizer\PathalizerInterface;
 use Tests\Utils\UnitTest\Service\NamespaceMapper\NamespaceMapper;
 use Tests\Utils\UnitTest\TestCase;
@@ -13,9 +14,9 @@ use Tests\Utils\UnitTest\TestCase;
 final class TestCaseGenerator
 {
     /**
-     * @var NamespaceMapper
+     * @var NamespaceMapperInterface
      */
-    private NamespaceMapper $namespaceMapper;
+    private NamespaceMapperInterface $namespaceMapper;
     /**
      * @var PathalizerInterface
      */
@@ -24,11 +25,11 @@ final class TestCaseGenerator
     /**
      * TestCaseGenerator constructor.
      * @param PathalizerInterface $pathalizer
-     * @param NamespaceMapper $namespaceMapper
+     * @param NamespaceMapperInterface $namespaceMapper
      */
     public function __construct(
         PathalizerInterface $pathalizer,
-        NamespaceMapper $namespaceMapper
+        NamespaceMapperInterface $namespaceMapper
     ) {
         $this->pathalizer = $pathalizer;
         $this->namespaceMapper = $namespaceMapper;
@@ -56,6 +57,6 @@ final class TestCaseGenerator
      */
     private function getUnitTestPath(ClassNamespace $unitTestFqn): SplFileInfo
     {
-        $this->pathalizer->getUnitTestPathFor($unitTestFqn);
+        return $this->pathalizer->getUnitTestPathFor($unitTestFqn);
     }
 }

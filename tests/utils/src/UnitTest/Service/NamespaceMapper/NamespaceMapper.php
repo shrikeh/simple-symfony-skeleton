@@ -8,7 +8,7 @@ use Ds\Map;
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\NamespaceCollection;
 
-final class NamespaceMapper
+final class NamespaceMapper implements NamespaceMapperInterface
 {
     /** @var NamespaceCollection  */
     private NamespaceCollection $namespaces;
@@ -32,18 +32,17 @@ final class NamespaceMapper
     }
 
     /**
-     * @param ClassNamespace $className
-     * @return ClassNamespace
+     * {@inheritDoc}
      */
-    public function getTestCaseFqnFor(ClassNamespace $className): ClassNamespace
+    public function getTestCaseFqnFor(ClassNamespace $subject): ClassNamespace
     {
-        $classBaseNamespace = $this->namespaces->match($className);
+        $classBaseNamespace = $this->namespaces->match($subject);
 
         $testBaseNamespace = ClassNamespace::fromNamespaceString(
             $this->namespaces->getMetadataFor($classBaseNamespace)
         );
 
-        $relativeClassNamespace = $className->getRelativeNamespaceTo($classBaseNamespace);
+        $relativeClassNamespace = $subject->getRelativeNamespaceTo($classBaseNamespace);
 
         return $this->createFullClassTestNamespace($testBaseNamespace, $relativeClassNamespace);
     }
