@@ -48,6 +48,16 @@ final class NamespaceCollection
         return $this->getMatchingNamespaces($namespace)->first()->key;
     }
 
+
+    /**
+     * @param ClassNamespace $fqn
+     * @return mixed
+     */
+    public function getMetadataFor(ClassNamespace $fqn)
+    {
+        return $this->namespaces->get($fqn);
+    }
+
     /**
      * @param ClassNamespace $fqn
      * @return Map
@@ -58,15 +68,6 @@ final class NamespaceCollection
         $matches->ksort(new NamespaceSort());
 
         return $matches;
-    }
-
-    /**
-     * @param ClassNamespace $fqn
-     * @return mixed
-     */
-    public function getMetadataFor(ClassNamespace $fqn)
-    {
-        return $this->namespaces->get($fqn);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\Tests\Utils\UnitTest;
 
+use Ds\Map;
 use PhpSpec\ObjectBehavior;
 use Tests\Utils\Matcher\MatchNamespace;
 use Tests\Utils\UnitTest\ClassNamespace;
@@ -31,6 +32,15 @@ final class NamespaceCollectionSpec extends ObjectBehavior
 
     public function it_returns_the_metadata(): void
     {
+        $map = new Map();
+
+        $fqn = ClassNamespace::fromNamespaceString('Foo\Bar\Baz');
+        $meta = ['foo'];
+        $map->put($fqn, $meta);
+        $this->beConstructedWith($map);
+
+        $this->getMetadataFor($fqn)->shouldReturn($meta);
+
 
     }
 }
