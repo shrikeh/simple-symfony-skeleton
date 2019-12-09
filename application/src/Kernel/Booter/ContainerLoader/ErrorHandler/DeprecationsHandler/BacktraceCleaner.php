@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler;
 
 use Symfony\Component\ErrorHandler\DebugClassLoader;
+
 use function array_slice;
 use function count;
 use function debug_backtrace;

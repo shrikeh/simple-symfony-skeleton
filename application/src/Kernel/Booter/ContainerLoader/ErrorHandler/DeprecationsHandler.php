@@ -7,6 +7,7 @@ namespace App\Kernel\Booter\ContainerLoader\ErrorHandler;
 use App\Deprecation\DeprecationsCollection;
 use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
 use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
+
 use function restore_error_handler;
 use function set_error_handler;
 

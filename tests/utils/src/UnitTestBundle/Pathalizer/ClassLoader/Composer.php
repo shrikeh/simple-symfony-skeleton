@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Utils\Service\UnitTests\Pathalizer\ClassLoader;
+namespace Tests\Utils\UnitTestBundle\Pathalizer\ClassLoader;
 
 use Composer\Autoload\ClassLoader;
 use SplFileInfo;
-use Tests\Utils\Service\UnitTests\Pathalizer\FqnPath;
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\NamespaceCollection;
+use Tests\Utils\UnitTestBundle\Pathalizer\FqnPath;
 
 final class Composer implements ClassLoaderInterface
 {
@@ -34,7 +35,7 @@ final class Composer implements ClassLoaderInterface
         $baseFqn = $namespaces->match($testCaseFqn);
         $baseDir = new SplFileInfo($namespaces->getMetadataFor($baseFqn));
 
-        return  new FqnPath(
+        return new FqnPath(
             $baseFqn,
             $baseDir
         );

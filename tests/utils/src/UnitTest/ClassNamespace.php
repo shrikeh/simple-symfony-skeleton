@@ -43,7 +43,8 @@ final class ClassNamespace
     /**
      * @return string
      */
-    public function getLastPart(): string {
+    public function getLastPart(): string
+    {
         return end($this->namespaceParts);
     }
 
@@ -98,7 +99,7 @@ final class ClassNamespace
         $classNameParts = $this->getNamespaceParts();
 
         $length = count($namespaceParts);
-        for ($i=0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; $i++) {
             $namespacePart = $namespaceParts[$i];
 
             if ($namespacePart === $classNameParts[$i]) {

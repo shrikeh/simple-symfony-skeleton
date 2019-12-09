@@ -6,7 +6,6 @@ namespace App\Kernel\Booter\ContainerLoader\ConfigCache;
 
 use App\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteContentTrait;
 use App\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteMetadataTrait;
-
 use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
 use SplFileObject;
 use Symfony\Component\Config\ConfigCacheInterface;

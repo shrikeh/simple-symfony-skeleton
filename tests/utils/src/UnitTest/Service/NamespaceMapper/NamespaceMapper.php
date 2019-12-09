@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Utils\UnitTest\Service\NamespaceMapper;
 
 use Ds\Map;
 use Tests\Utils\UnitTest\ClassNamespace;
-
 use Tests\Utils\UnitTest\NamespaceCollection;
 
 final class NamespaceMapper

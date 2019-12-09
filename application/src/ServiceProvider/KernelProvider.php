@@ -6,10 +6,17 @@ namespace App\ServiceProvider;
 
 use App\Console\Application;
 use App\Console\Kernel;
+use App\Deprecation\DeprecationsCollection;
 use App\Kernel\Booter\Booter;
 use App\Kernel\Booter\BooterInterface;
 use App\Kernel\Booter\BundleLoader\BundlerLoaderInterface;
 use App\Kernel\Booter\BundleLoader\FileBundleLoader;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCache;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCacheFactoryInterface;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
+use App\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\OpcacheInvalidator;
+use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
+use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
 use App\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
 use App\Kernel\ConfigurationLoader\FileConfigurationLoader;
 use App\Kernel\Booter\ContainerLoader\ContainerCache\ContainerCacheInterface;
@@ -103,14 +110,26 @@ final class KernelProvider implements ServiceProviderInterface
             );
         };
 
-        $p[DeprecationsHandler::class] = static function (): DeprecationsHandler {
-            return new DeprecationsHandler();
+        $p[DeprecationsHandler::class] = static function (Container $c): DeprecationsHandler {
+            return DeprecationsHandler::create(
+                $c[DeprecationsCollection::class],
+                $c[BacktraceCleanerInterface::class]
+            );
+        };
+
+        $p[BacktraceCleanerInterface::class] = static function (): BacktraceCleanerInterface {
+            return new BacktraceCleaner();
+        };
+
+        $p[DeprecationsCollection::class] = static function (): DeprecationsCollection {
+            return new DeprecationsCollection();
         };
 
         $p[ContainerDumperInterface::class] = static function (Container $c): ContainerDumperInterface {
             return new SymfonyPhpDumper(
                 $c[CachePath::class],
-                $c[Filesystem::class]
+                $c[Filesystem::class],
+                $c[ConfigCacheFactoryInterface::class]
             );
         };
 
@@ -120,6 +139,19 @@ final class KernelProvider implements ServiceProviderInterface
 
         $p[Filesystem::class] = static function (): Filesystem {
             return new Filesystem();
+        };
+
+        $p[ConfigCacheFactoryInterface::class] = static function (
+            Container $c
+        ): ConfigCacheFactoryInterface {
+            return new ConfigCache(
+                $c[Filesystem::class],
+                $c[CacheInvalidatorInterface::class]
+            );
+        };
+
+        $p[CacheInvalidatorInterface::class] = static function (Container $c): CacheInvalidatorInterface {
+            return new OpcacheInvalidator();
         };
 
         $p['server_variables'] = $p->protect(static function (): array {

@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Utils\UnitTestBundle\Pathalizer;
 
 use SplFileInfo;
-
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\Service\Pathalizer\PathalizerInterface;
+
 use function preg_quote;
 use function preg_replace;
+
 use Tests\Utils\UnitTestBundle\Pathalizer\ClassLoader\ClassLoaderInterface;
 
 final class Psr4Pathalizer implements PathalizerInterface
@@ -44,7 +46,8 @@ final class Psr4Pathalizer implements PathalizerInterface
         $path =  preg_replace(
             self::getDirRegex(),
             DIRECTORY_SEPARATOR,
-            $this->getPath($testCaseFqn));
+            $this->getPath($testCaseFqn)
+        );
 
         return new SplFileInfo($path);
     }

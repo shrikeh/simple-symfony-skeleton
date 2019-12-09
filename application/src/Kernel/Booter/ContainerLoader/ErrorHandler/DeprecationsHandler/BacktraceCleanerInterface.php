@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler;
 
 interface BacktraceCleanerInterface

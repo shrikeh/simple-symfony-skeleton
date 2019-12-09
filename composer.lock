@@ -2165,12 +2165,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Behat.git",
-                "reference": "962f74d80c8ff73038c9a6291ea5df7d899c7e4f"
+                "reference": "e04b13824c595cb40ac1e2123c7bb0c2131a6d00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Behat/zipball/962f74d80c8ff73038c9a6291ea5df7d899c7e4f",
-                "reference": "962f74d80c8ff73038c9a6291ea5df7d899c7e4f",
+                "url": "https://api.github.com/repos/Behat/Behat/zipball/e04b13824c595cb40ac1e2123c7bb0c2131a6d00",
+                "reference": "e04b13824c595cb40ac1e2123c7bb0c2131a6d00",
                 "shasum": ""
             },
             "require": {
@@ -2191,6 +2191,9 @@
                 "herrera-io/box": "~1.6.1",
                 "phpunit/phpunit": "^4.8.36|^6.3",
                 "symfony/process": "~2.5|~3.0|~4.0"
+            },
+            "suggest": {
+                "ext-dom": "Needed to output test results in JUnit format."
             },
             "bin": [
                 "bin/behat"
@@ -2234,7 +2237,7 @@
                 "symfony",
                 "testing"
             ],
-            "time": "2019-09-30T14:01:25+00:00"
+            "time": "2019-11-09T16:45:48+00:00"
         },
         {
             "name": "behat/gherkin",
@@ -4884,16 +4887,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.4.3",
+            "version": "8.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "67f9e35bffc0dd52d55d565ddbe4230454fd6a4e"
+                "reference": "3ee1c1fd6fc264480c25b6fb8285edefe1702dab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/67f9e35bffc0dd52d55d565ddbe4230454fd6a4e",
-                "reference": "67f9e35bffc0dd52d55d565ddbe4230454fd6a4e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3ee1c1fd6fc264480c25b6fb8285edefe1702dab",
+                "reference": "3ee1c1fd6fc264480c25b6fb8285edefe1702dab",
                 "shasum": ""
             },
             "require": {
@@ -4937,7 +4940,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "8.4-dev"
+                    "dev-master": "8.5-dev"
                 }
             },
             "autoload": {
@@ -4963,7 +4966,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-11-06T09:42:23+00:00"
+            "time": "2019-12-06T05:41:38+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

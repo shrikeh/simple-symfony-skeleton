@@ -16,11 +16,12 @@ use Symfony\Component\HttpKernel\KernelInterface;
 final class ConsoleProvider implements ServiceProviderInterface
 {
     /**
+     * @param Container|null $container
      * @return ContainerInterface
      */
-    public static function serviceLocator(): ContainerInterface
+    public static function serviceLocator(Container $container = null): ContainerInterface
     {
-        return new ServiceLocator(static::create(), [
+        return new ServiceLocator(static::create($container), [
             Application::class,
             InputInterface::class
         ]);

@@ -7,9 +7,10 @@ namespace App\Deprecation;
 use App\Deprecation\Exception\ImmutablePropertyModification;
 use App\Deprecation\Exception\ImmutablePropertyUnset;
 use App\Deprecation\Exception\TypeNotDeprecation;
-use function array_key_exists;
 use ArrayAccess;
 use JsonSerializable;
+
+use function array_key_exists;
 
 final class Deprecation implements ArrayAccess, JsonSerializable
 {
