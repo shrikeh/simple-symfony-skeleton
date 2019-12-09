@@ -40,7 +40,5 @@ final class NamespaceCollectionSpec extends ObjectBehavior
         $this->beConstructedWith($map);
 
         $this->getMetadataFor($fqn)->shouldReturn($meta);
-
-
     }
 }

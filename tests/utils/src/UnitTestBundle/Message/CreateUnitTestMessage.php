@@ -10,6 +10,7 @@ final class CreateUnitTestMessage implements JsonSerializable
 {
     public const KEY_SUBJECT = 'test_subject';
 
+    /** @var string  */
     private string $testSubject;
 
     /**
