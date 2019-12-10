@@ -13,12 +13,29 @@ Saying that, we came across some interesting ideas, so I turned it into a skelet
 
 Spoiler: It is hard work. _Don't skip on TDD, folks._
 
+## Why all the code?
+While a technical test is supposed to show the developer is aware of not [gold plating][gold_plating] a feature, technical tests are, by their nature, an opportunity to show your experience. Therefore:
+- the heart of the technical test will _not_ be gold-plated.
+- the development environment _will_ use a variety of different technologies to show various approaches and to have a pre-baked test harness.
+
 ## PHP 7.4
 The project runs on [PHP 7.4][php74] or above. As not many distros have this by default in their repositories, this is provided in two ways:
-- [a Vagrant box][vagrant] (Ubuntu bionic)
+- [a Vagrant box][vagrant] ([Ubuntu bionic][bionic])
 - [Official php docker images][docker_php]
 
-The Vagrant box also has docker and [docker-compose][docker_compose].
+The Vagrant box also has docker and [docker-compose][docker_compose]. It uses [ansible][ansible] to provision. If you don't have it, but you have Python, you can run the following:
+
+```bash
+pip3 install ansible
+```
+
+## Setup
+
+The application will run with a simple:
+
+```
+make run
+```
 
 ## Test Strategy
 The skeleton uses various test strategies - some chosen simply to try them out, others because they were the best fit.
@@ -33,12 +50,15 @@ The skeleton uses various test strategies - some chosen simply to try them out, 
 The main functionality is provided by a [Makefile](./Makefile). The principle commands:
 
 ```bash
-make phpunit
-make phpspec
-make behat
-make infection
+make phpunit # for phpunit tests
+make phpspec # for specs
+make behat # for behat features
+make infection # to ensure unit tests are covering the core functions.
 ```
-These all run in order if you run the command `make test`.
+
+All of these run a shell script that detects if you have docker-compose locally, and if not, will run them inside vagrant.
+
+These all run in order if you run the command `make test`. 
 
 [docker_php]: https://hub.docker.com/_/php/
 [docker_compose]: https://docs.docker.com/compose/
@@ -48,3 +68,6 @@ These all run in order if you run the command `make test`.
 [phpspec]: https://www.phpspec.net/en/stable/
 [infection]: https://infection.github.io/
 [vagrant]: https://www.vagrantup.com/
+[ansible]: https://docs.ansible.com/
+[bionic]: https://app.vagrantup.com/hashicorp/boxes/bionic64
+[gold_plating]: https://dzone.com/articles/the-challenge-successful-design-v-gold-plating

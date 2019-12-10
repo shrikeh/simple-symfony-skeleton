@@ -3,4 +3,6 @@ Feature: So that I can deliver quality
   I want my app to be a well-tested, message-bus driven, Symfony application.
 
   Scenario: Fire a test message
-    Given that
+    Given that I have the message "Hello behat!"
+    When I send this message
+    Then it is received.

@@ -24,6 +24,7 @@
   "require-dev": {
     "ext-xdebug": "*",
     "behat/behat": "^3.5@dev",
+    "behat/symfony2-extension": "^2.1",
     "codedungeon/phpunit-result-printer": "^0.26.2",
     "friendsofphp/php-cs-fixer": "^2.16",
     "infection/infection": "^0.14.2",
