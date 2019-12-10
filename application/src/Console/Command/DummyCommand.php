@@ -49,7 +49,7 @@ final class DummyCommand extends Command
      * {@inheritDoc}
      * @throws CommandDispatchFailed If the message fails to dispatch
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stamp = new SentStamp(__CLASS__, sprintf('console:%s', $this->getName()));
         $envelope = new Envelope(
@@ -62,6 +62,8 @@ final class DummyCommand extends Command
             throw CommandDispatchFailed::fromEnvelope($envelope, $e);
         }
         $this->logMessageSent($envelope);
+
+        return 0;
     }
 
     /**

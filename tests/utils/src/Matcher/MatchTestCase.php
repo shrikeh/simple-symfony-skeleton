@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Utils\Matcher;
 
-
 use PhpSpec\Exception\Example\MatcherException;
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\TestCase;
@@ -32,7 +31,7 @@ final class MatchTestCase
             throw new MatcherException(sprintf(
                 'Test case FQN "%s" does not match expected "%s"',
                 $testCaseClassNs->toString(),
-            $testCaseFqn
+                $testCaseFqn
             ));
         }
         $subjectClassNs = $testCase->getSubjectFqn();

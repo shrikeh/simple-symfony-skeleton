@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 # {{ ansible_managed }}
 cd {{ vagrant_synced_folder_path }};
+
+PATH="{{ vagrant_synced_folder_path }}/application/bin:{{ vagrant_synced_folder_path }}/vendor/bin:${PATH}"

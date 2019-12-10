@@ -6,4 +6,4 @@ RUN apk add --no-cache git curl
 
 WORKDIR /security-check
 
-#ENTRYPOINT ["./application/bin/symfony", "security:check"]
+ENTRYPOINT ["./application/bin/symfony", "security:check"]

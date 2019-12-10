@@ -12,7 +12,7 @@ use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\Service\NamespaceMapper\NamespaceMapperInterface;
 use Tests\Utils\UnitTest\Service\Pathalizer\PathalizerInterface;
 use Tests\Utils\UnitTest\TestCase;
-use Tests\Utils\UnitTestBundle\Message\CreateUnitTestMessage;
+use Tests\Utils\TestCaseBundle\Message\CreateUnitTestMessage;
 
 final class TestCaseGeneratorSpec extends ObjectBehavior
 {

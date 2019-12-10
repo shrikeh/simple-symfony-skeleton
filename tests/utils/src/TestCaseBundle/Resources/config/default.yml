@@ -1,0 +1,52 @@
+---
+parameters:
+  test_case.template: 'TestCase.php.twig'
+  test_case.params:
+    author:
+      name: Barney Hanlon
+      email: barney@shrikeh.net
+    copyright_date: 12-2019
+
+  test_case.namespaces:
+    App: 'Tests\Unit\App'
+
+  test_case.template_dir: !php/const Tests\Utils\TestCaseBundle\TestCaseBundle::DEFAULT_TEMPLATE_DIR
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  Tests\Utils\:
+    resource: '../../../'
+    exclude: '../../{Kernel,DependencyInjection,Entity,Migrations}'
+
+  Composer\Autoload\ClassLoader:
+    factory: [Env, getAutoloader]
+
+  Tests\Utils\TestCaseBundle\TestCaseRenderer\TwigTestCaseRenderer:
+    arguments:
+      - '@Twig\Environment'
+      - '@Tests\Utils\TestCaseBundle\TestCaseRenderer\TemplateData\TemplateDataInterface'
+      - '%test_case.template%'
+
+  Twig\Environment:
+    arguments:
+      - '@Twig\Loader\LoaderInterface'
+
+  Twig\Loader\LoaderInterface: '@Twig\Loader\FilesystemLoader'
+  Twig\Loader\FilesystemLoader:
+    arguments:
+      - '%test_case.template_dir%'
+
+  Tests\Utils\TestCaseBundle\TestCaseRenderer\TemplateData\SimpleTemplateData:
+    arguments:
+      - '%test_case.params%'
+
+  Tests\Utils\UnitTest\NamespaceCollection:
+    factory: [Tests\Utils\UnitTest\NamespaceCollection, fromArray]
+    arguments:
+      - '%test_case.namespaces%'

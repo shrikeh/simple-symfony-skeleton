@@ -1,11 +1,14 @@
 ---
+formatter.name: pretty
 suites:
+  default:
+    composer_suite_detection: true
   domain:
     spec_path: "%paths.config%/tests"
     src_path: "%paths.config%/application/lib"
     namespace: Shrikeh\TestSymfonyApp
     psr4_prefix: Shrikeh\TestSymfonyApp
-    composer_suite_detection: true
+
 
   utils:
     bootstrap: "%paths.config%/application/bootstrap.php"
@@ -13,4 +16,3 @@ suites:
     src_path: "%paths.config%/tests/utils/src"
     namespace: Tests\Utils
     psr4_prefix: Tests\Utils
-    composer_suite_detection: true
