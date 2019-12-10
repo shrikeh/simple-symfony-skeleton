@@ -13,6 +13,7 @@ vagrant-rebuild:
 run:
   # doing it in this order solves race condition but it isn't a great solution.
   # containers should wait until amqp is available ideally.
+
 	docker-compose run -d rabbitmq
 	docker-compose build --parallel consumer cli
 	docker-compose run -d consumer

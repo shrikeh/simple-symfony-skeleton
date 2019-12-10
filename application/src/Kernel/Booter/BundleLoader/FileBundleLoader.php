@@ -89,7 +89,9 @@ final class FileBundleLoader implements BundlerLoaderInterface
     private function initEnvBundle(string $class, array $envs): ?BundleInterface
     {
         if ($envs[$this->environment->getName()] ?? $envs[static::ENVIRONMENTS_ALL] ?? false) {
-            return new $class();
+            if (class_exists($class)) {
+                return new $class();
+            }
         }
 
         return null;

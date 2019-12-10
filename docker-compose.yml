@@ -29,7 +29,6 @@ services:
       context: ./
       dockerfile: tools/docker/consumer/Dockerfile
     environment:
-      APP_ENV: test
       SYMFONY_CACHE_DIR: /cache
       MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
     volumes:

@@ -5,3 +5,4 @@ vendor/
 !.git*
 !.editorconfig
 !.phpspec
+!.env.dist
