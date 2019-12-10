@@ -9,7 +9,9 @@ use App\Message\DummyMessage;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,7 +22,9 @@ final class DummyCommand extends Command
 {
     public const NAME = 'shrikeh:dummy';
 
-    public const DEFAULT_TEST_MESSAGE = 'we are here';
+    public const DEFAULT_TEST_MESSAGE = 'Hello World';
+
+    public const ARG_TEST_MESSAGE = 'message';
 
     public const LOG_CONTEXT = 'console';
     /**
@@ -46,16 +50,26 @@ final class DummyCommand extends Command
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function configure(): void
+    {
+        $this->addOption(
+        self::ARG_TEST_MESSAGE,
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'What should I send to the message bus?',
+        self::DEFAULT_TEST_MESSAGE
+        );
+    }
+
+    /**
      * {@inheritDoc}
      * @throws CommandDispatchFailed If the message fails to dispatch
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $stamp = new SentStamp(__CLASS__, sprintf('console:%s', $this->getName()));
-        $envelope = new Envelope(
-            new DummyMessage(static::DEFAULT_TEST_MESSAGE),
-            [$stamp]
-        );
+        $envelope = $this->getMessageEnvelope($input);
         try {
             $this->messageBus->dispatch($envelope);
         } catch (Exception $e) {
@@ -64,6 +78,22 @@ final class DummyCommand extends Command
         $this->logMessageSent($envelope);
 
         return 0;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return Envelope
+     */
+    private function getMessageEnvelope(InputInterface $input): Envelope
+    {
+        $stamp = new SentStamp(
+            __CLASS__,
+            sprintf('console:%s', $this->getName())
+        );
+        return new Envelope(
+            new DummyMessage($input->getOption(self::ARG_TEST_MESSAGE)),
+            [$stamp]
+        );
     }
 
     /**

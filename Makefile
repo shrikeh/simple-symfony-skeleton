@@ -11,7 +11,7 @@ vagrant-rebuild:
 	vagrant destroy -f
 	vagrant up
 run:
-	docker-compose --build up
+	docker-compose up
 
 build-docker: down
 	docker-compose build --parallel

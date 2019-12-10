@@ -91,6 +91,8 @@ final class FileBundleLoader implements BundlerLoaderInterface
         if ($envs[$this->environment->getName()] ?? $envs[static::ENVIRONMENTS_ALL] ?? false) {
             return new $class();
         }
+
+        return null;
     }
 
     /**

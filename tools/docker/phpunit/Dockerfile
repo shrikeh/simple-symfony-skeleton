@@ -8,6 +8,5 @@ RUN apk add --no-cache git
 RUN apk add --no-cache ${PHPIZE_DEPS} && pecl install xdebug && docker-php-ext-enable xdebug
 
 WORKDIR /code
-COPY tools/docker/phpunit/chroot.ini ${PHP_INI_DIR}/conf.d/
 ENTRYPOINT php ./vendor/bin/phpunit --prepend ${XDEBUG_FILTER} --configuration ./phpunit.xml
 

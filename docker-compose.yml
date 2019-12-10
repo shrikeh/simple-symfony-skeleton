@@ -9,28 +9,7 @@ services:
     networks:
       - amqp_consumers
       - amqp_senders
-  infection:
-    build:
-      context: ./
-      dockerfile: ./tools/docker/infection/Dockerfile
-    volumes:
-      - .:/code
-  phpunit:
-    build:
-      context: ./
-      dockerfile: ./tools/docker/phpunit/Dockerfile
-    environment:
-      PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
-    volumes:
-      - .:/code
-      - type: tmpfs
-        target: /cache
-  security-check:
-    build:
-      context: ./
-      dockerfile: tools/docker/security-check/Dockerfile
-    volumes:
-      - .:/security-check
+
   cli:
     build:
       context: ./
@@ -50,6 +29,7 @@ services:
       context: ./
       dockerfile: ./tools/docker/consumer/Dockerfile
     environment:
+      APP_ENV: test
       SYMFONY_CACHE_DIR: /cache
       MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
     volumes:

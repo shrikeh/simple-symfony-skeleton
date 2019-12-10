@@ -1,0 +1,26 @@
+---
+version: "3.7"
+
+services:
+  infection:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/infection/Dockerfile
+    volumes:
+      - .:/code
+  phpunit:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/phpunit/Dockerfile
+    environment:
+      PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
+    volumes:
+      - .:/code
+      - type: tmpfs
+        target: /cache
+  security-check:
+    build:
+      context: ./
+      dockerfile: tools/docker/security-check/Dockerfile
+    volumes:
+      - .:/security-check

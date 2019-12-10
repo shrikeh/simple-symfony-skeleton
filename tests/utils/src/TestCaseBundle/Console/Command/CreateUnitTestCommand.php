@@ -13,7 +13,9 @@ use Tests\Utils\TestCaseBundle\Message\CreateUnitTestMessage;
 
 final class CreateUnitTestCommand extends Command
 {
+    /** @var string  */
     public const NAME = 'testcase:create';
+    /** @var string  */
     public const ARG_SUBJECT = 'subject';
 
     /**

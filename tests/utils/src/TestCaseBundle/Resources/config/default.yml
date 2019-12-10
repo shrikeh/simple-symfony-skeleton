@@ -3,8 +3,8 @@ parameters:
   test_case.template: 'TestCase.php.twig'
   test_case.params:
     author:
-      name: Barney Hanlon
-      email: barney@shrikeh.net
+      name: '%env(string:AUTHOR_NAME)%'
+      email: '%env(string:AUTHOR_EMAIL)%'
     copyright_date: 12-2019
 
   test_case.namespaces:
