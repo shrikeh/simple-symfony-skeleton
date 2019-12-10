@@ -55,11 +55,11 @@ final class DummyCommand extends Command
     protected function configure(): void
     {
         $this->addOption(
-        self::ARG_TEST_MESSAGE,
-        null,
-        InputOption::VALUE_OPTIONAL,
-        'What should I send to the message bus?',
-        self::DEFAULT_TEST_MESSAGE
+            self::ARG_TEST_MESSAGE,
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'What should I send to the message bus?',
+            self::DEFAULT_TEST_MESSAGE
         );
     }
 

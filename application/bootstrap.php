@@ -11,7 +11,7 @@ use Symfony\Component\Dotenv\Dotenv;
 $dotenv = new Dotenv();
 
 // You can also load several files
-$dotenv->load( __DIR__ . '/.env.local');
+$dotenv->load(__DIR__ . '/.env.local');
 
 Env::set($_SERVER, $_ENV);
 Env::setAutoloader($classLoader);

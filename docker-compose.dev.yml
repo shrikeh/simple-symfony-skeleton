@@ -8,6 +8,12 @@ services:
       dockerfile: tools/docker/dev/infection/Dockerfile
     volumes:
       - .:/code
+  phpcs:
+    build:
+      context: ./
+      dockerfile: tools/docker/dev/phpcs/Dockerfile
+    volumes:
+      - .:/code
   phpunit:
     build:
       context: ./
