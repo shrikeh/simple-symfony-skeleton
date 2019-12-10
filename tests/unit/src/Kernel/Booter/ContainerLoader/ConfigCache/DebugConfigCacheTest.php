@@ -56,5 +56,4 @@ final class DebugConfigCacheTest extends TestCase
 
         $configCache->write($content);
     }
-
 }

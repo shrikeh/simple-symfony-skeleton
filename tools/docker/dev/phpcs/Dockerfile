@@ -8,4 +8,4 @@ RUN apk add --no-cache git
 RUN apk add --no-cache ${PHPIZE_DEPS} && pecl install xdebug ds && docker-php-ext-enable xdebug ds
 
 WORKDIR /code
-ENTRYPOINT php ./vendor/bin/phpcs application
+ENTRYPOINT php ./vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --cache -p application

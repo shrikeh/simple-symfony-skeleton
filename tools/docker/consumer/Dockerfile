@@ -10,6 +10,7 @@ COPY ./tools/bin/install-composer.sh .
 RUN sh ./install-composer.sh
 
 WORKDIR /build
+COPY ./.env.dist .
 COPY ./composer.json .
 COPY ./composer.lock .
 COPY ./application ./application

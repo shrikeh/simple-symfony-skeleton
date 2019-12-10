@@ -61,7 +61,11 @@ final class DummyCommandTest extends TestCase
         $this->assertInstanceOf(SentStamp::class, $envelope->last(SentStamp::class));
     }
 
-    public function testItLogsSendingTheCommand(): void
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function itLogsSendingTheCommand(): void
     {
         /** @var Envelope $envelope */
         $envelope = null;
@@ -95,6 +99,23 @@ final class DummyCommandTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function itConfiguresTheDefinition(): void
+    {
+        $testCommand = new DummyCommand($this->messageBus->reveal(), $this->logger->reveal());
+
+        $envelope = new Envelope(new stdClass());
+
+        $this->messageBus->dispatch(Argument::any())->willReturn($envelope);
+        $definition = $testCommand->getDefinition();
+        $this->assertTrue($definition->hasOption(DummyCommand::ARG_TEST_MESSAGE));
+        $option = $definition->getOption(DummyCommand::ARG_TEST_MESSAGE);
+        $this->assertSame(DummyCommand::DEFAULT_TEST_MESSAGE, $option->getDefault());
+        $testCommand->run($this->input->reveal(), $this->output->reveal());
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function setUp(): void
@@ -116,6 +137,7 @@ final class DummyCommandTest extends TestCase
         $input->bind(Argument::type(InputDefinition::class))->shouldBeCalled();
         $input->isInteractive()->willReturn(false);
         $input->hasArgument('command')->willReturn(false);
+        $input->getOption(DummyCommand::ARG_TEST_MESSAGE)->willReturn(DummyCommand::DEFAULT_TEST_MESSAGE);
         $input->validate()->shouldBeCalled();
 
         return $input;

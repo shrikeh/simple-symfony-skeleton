@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 $classLoader = require dirname(__DIR__) . '/vendor/autoload.php';
 
-require_once __DIR__ . '/Env.php';
+use App\Bootstrap;
 
-use Symfony\Component\Dotenv\Dotenv;
+Bootstrap::loadDotEnv(dirname(__DIR__) . '/.env');
 
-$dotenv = new Dotenv();
+Bootstrap::set($_SERVER, $_ENV);
+Bootstrap::setAutoloader($classLoader);
 
-// You can also load several files
-$dotenv->load(__DIR__ . '/.env.local');
-
-Env::set($_SERVER, $_ENV);
-Env::setAutoloader($classLoader);
-
-return $classLoader;
+return Bootstrap::getAutoloader();

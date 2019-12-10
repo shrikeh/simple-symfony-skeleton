@@ -18,6 +18,20 @@ While a technical test is supposed to show the developer is aware of not [gold p
 - the heart of the technical test will _not_ be gold-plated.
 - the development environment _will_ use a variety of different technologies to show various approaches and to have a pre-baked test harness.
 
+### Structure
+While this is a Symfony 4 app, the established directory structure has some limitations. More granularity is required when splitting business logic from framework implementation than one directory.
+
+Additionally, as the default Symfony-generated kernel is not easily unit tested (and it's your code, so you should have _some_ tests around it), it has been replaced with a testable version. This sacrifices the highly-optimised version for testability and has not been benchmarked; be careful.
+
+Beyond the standard `/vendor` directory, there are three main directories:
+- `/application`: This is where the main code runs. It is separated into two directories in a hope to keep it aligned with Domain-Driven Design (DDD):
+  - `lib`: for the domain (business logic)
+  - `src`: for the implementation
+  
+- `/tests`: this is where all the various tests exist. 
+
+- `/tools`: Various tools (docker, ansible, shell scripts) for making a better life.
+
 ## PHP 7.4
 The project runs on [PHP 7.4][php74] or above. As not many distros have this by default in their repositories, this is provided in two ways:
 - [a Vagrant box][vagrant] ([Ubuntu bionic][bionic])

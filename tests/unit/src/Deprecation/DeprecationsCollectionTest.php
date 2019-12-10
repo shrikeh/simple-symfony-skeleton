@@ -31,7 +31,7 @@ final class DeprecationsCollectionTest extends TestCase
             $this->assertSame($file, $deprecation[Deprecation::KEY_FILE]);
             $this->assertSame($line, $deprecation[Deprecation::KEY_LINE]);
             $this->assertSame($trace, $deprecation[Deprecation::KEY_TRACE]);
-            $this->assertSame(1,  $deprecation[Deprecation::KEY_COUNT]);
+            $this->assertSame(1, $deprecation[Deprecation::KEY_COUNT]);
         }
     }
 

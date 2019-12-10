@@ -9,6 +9,7 @@ use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler;
 use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
 use App\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
 use PHPUnit\Framework\TestCase;
+
 use function restore_error_handler;
 use function set_error_handler;
 
@@ -71,7 +72,7 @@ final class DeprecationsHandlerTest extends TestCase
         $this->assertArrayHasKey($msg, $recordedErrors);
         $recordedError = $recordedErrors[$msg];
 
-        foreach(['type', 'message', 'file', 'line', 'count'] as $key) {
+        foreach (['type', 'message', 'file', 'line', 'count'] as $key) {
             $this->assertSame($error[$key], $recordedError[$key]);
         }
     }
@@ -118,7 +119,8 @@ final class DeprecationsHandlerTest extends TestCase
      */
     private function getCurrentErrorHandler(): callable
     {
-        $errorHandler = set_error_handler(static function(){});
+        $errorHandler = set_error_handler(static function () {
+        });
         restore_error_handler();
 
         return $errorHandler;
