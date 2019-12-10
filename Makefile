@@ -11,18 +11,30 @@ vagrant-rebuild:
 	vagrant destroy -f
 	vagrant up
 run:
-	docker-compose up
+  # doing it in this order solves race condition but it isn't a great solution.
+  # containers should wait until amqp is available ideally.
+	docker-compose run -d rabbitmq
+	docker-compose build --parallel consumer cli
+	docker-compose run -d consumer
+	docker-compose run cli
 
 build-docker: down
 	docker-compose build --parallel
 
+test: phpcs phpspec infection
+
 down:
 	docker-compose down
-infection:
-	./vendor/bin/infection --debug -j2 --coverage=build/coverage --show-mutations
-
+phpspec:
+	./tools/bin/run_test.sh phpspec
+# Runs infection. Depends on phpunit so we run that first
+infection: phpunit
+	./tools/bin/run_test.sh infection
+phpcs:
+	./tools/bin/run_test.sh phpcs
+# Runs phpunit
 phpunit:
-	./tools/bin/phpunit.sh
+	./tools/bin/run_test.sh phpunit
 
 security-check:
-	./tools/bin/security-check.sh
+	./tools/bin/run_test.sh security-check

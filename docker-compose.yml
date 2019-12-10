@@ -27,7 +27,7 @@ services:
   consumer:
     build:
       context: ./
-      dockerfile: ./tools/docker/consumer/Dockerfile
+      dockerfile: tools/docker/consumer/Dockerfile
     environment:
       APP_ENV: test
       SYMFONY_CACHE_DIR: /cache

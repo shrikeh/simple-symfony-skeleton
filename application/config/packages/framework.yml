@@ -17,7 +17,7 @@ framework:
         retry_strategy:
           max_retries: 5
           # milliseconds delay
-          delay: 1000
+          delay: 5000
           # causes the delay to be higher before each retry
           # e.g. 1 second delay, 2 seconds, 4 seconds
           multiplier: 2

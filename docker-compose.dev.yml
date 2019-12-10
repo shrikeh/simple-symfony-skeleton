@@ -5,13 +5,13 @@ services:
   infection:
     build:
       context: ./
-      dockerfile: ./tools/docker/infection/Dockerfile
+      dockerfile: tools/docker/dev/infection/Dockerfile
     volumes:
       - .:/code
   phpunit:
     build:
       context: ./
-      dockerfile: ./tools/docker/phpunit/Dockerfile
+      dockerfile: tools/docker/dev/phpunit/Dockerfile
     environment:
       PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
     volumes:
@@ -21,6 +21,12 @@ services:
   security-check:
     build:
       context: ./
-      dockerfile: tools/docker/security-check/Dockerfile
+      dockerfile: tools/docker/dev/security-check/Dockerfile
     volumes:
       - .:/security-check
+  phpspec:
+    build:
+      context: ./
+      dockerfile: tools/docker/dev/phpspec/Dockerfile
+    volumes:
+      - .:/code
