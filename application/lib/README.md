@@ -1,3 +1,3 @@
-# Business Logic
+This folder is for the application bootstrap (Kernel, Application, Container building, etc).
 
-This directory is for business logic. Do not put implementation-specific code in here.
+It features a heavily modified version of the Symfony-generated kernel to allow for unit testing.

@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-use App\Console\Application;
-use App\Kernel\Environment\Environment;
-use App\ServiceProvider\ConsoleProvider;
+use Shrikeh\TestSymfonyApp\Console\Application;
+use Shrikeh\TestSymfonyApp\Kernel\Environment\Environment;
+use Shrikeh\TestSymfonyApp\ServiceProvider\ConsoleProvider;
 use Symfony\Component\Console\Input\InputInterface;
 
 require_once dirname(__DIR__) . '/bootstrap.php';
 
 if (false === in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . PHP_SAPI . ' SAPI' . PHP_EOL;
+    echo sprintf(
+        'Warning: The console should be invoked via the CLI version of PHP, not the %s SAPI' . PHP_EOL,
+        PHP_SAPI
+    );
 }
 
 set_time_limit(0);

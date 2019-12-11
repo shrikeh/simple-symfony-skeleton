@@ -23,5 +23,5 @@ framework:
           multiplier: 2
           max_delay: 0
     routing:
-      App\Message\DummyMessage: amqp
+      App\Message\HelloWorldMessage: amqp
 

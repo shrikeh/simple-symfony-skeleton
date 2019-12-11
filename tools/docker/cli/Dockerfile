@@ -27,4 +27,4 @@ RUN apk add --no-cache $PHPIZE_DEPS && pecl install amqp ds && docker-php-ext-en
 WORKDIR /app
 COPY --from=build-cli /build .
 
-ENTRYPOINT ["php", "application/bin/console", "shrikeh:dummy"]
+ENTRYPOINT ["php", "application/bin/console", "shrikeh:helloworld"]

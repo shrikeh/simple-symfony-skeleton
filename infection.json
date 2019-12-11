@@ -2,7 +2,8 @@
   "timeout": 10,
   "source": {
     "directories": [
-      "application/src/"
+      "application/lib/",
+      "application/app/"
     ]
   },
   "phpUnit": {

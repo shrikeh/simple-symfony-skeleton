@@ -12,6 +12,7 @@ xdebug_set_filter(
     XDEBUG_FILTER_CODE_COVERAGE,
     XDEBUG_PATH_WHITELIST,
     [
+        sprintf($applicationDir, 'app'),
         sprintf($applicationDir, 'src'),
         sprintf($applicationDir, 'lib'),
     ]

@@ -9,6 +9,7 @@ parameters:
 
   test_case.namespaces:
     App: 'Tests\Unit\App'
+    Shrikeh\TestSymfonyApp: 'Tests\Unit\
 
   test_case.template_dir: !php/const Tests\Utils\TestCaseBundle\TestCaseBundle::DEFAULT_TEMPLATE_DIR
 

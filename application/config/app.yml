@@ -11,7 +11,7 @@ services:
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
-    resource: '%kernel.project_dir%/src/*'
+    resource: '%kernel.project_dir%/app/*'
     exclude: '%kernel.project_dir%/src/{Kernel,DependencyInjection,Entity,Migrations}'
-  Shrikeh\TestSymfonyApp\:
-    resource: '%kernel.project_dir%/lib/*'
+  TechTest\BusinessLogic\:
+    resource: '%kernel.project_dir%/src/*'

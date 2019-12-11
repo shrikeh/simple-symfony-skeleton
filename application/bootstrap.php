@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 $classLoader = require dirname(__DIR__) . '/vendor/autoload.php';
 
-use App\Bootstrap;
+use Shrikeh\TestSymfonyApp\Bootstrap;
 
 Bootstrap::loadDotEnv(dirname(__DIR__) . '/.env');
 

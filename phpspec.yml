@@ -5,9 +5,9 @@ suites:
     composer_suite_detection: true
   domain:
     spec_path: "%paths.config%/tests"
-    src_path: "%paths.config%/application/lib"
-    namespace: Shrikeh\TestSymfonyApp
-    psr4_prefix: Shrikeh\TestSymfonyApp
+    src_path: "%paths.config%/application/src"
+    namespace: TechTest\BusinessLogic\
+    psr4_prefix: TechTest\BusinessLogic\
 
 
   utils:

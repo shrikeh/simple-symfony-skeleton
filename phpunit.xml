@@ -25,13 +25,17 @@
         <log type="junit" target="build/coverage/phpunit.junit.xml" />
     </logging>
     <testsuites>
-        <testsuite name="Unit Tests">
-            <directory>tests/unit/src</directory>
+        <testsuite name="Technical Test Unit Tests">
+            <directory>tests/unit/app</directory>
+        </testsuite>
+        <testsuite name="Symfony App Unit Tests">
+          <directory>tests/unit/lib</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">application/src</directory>
+            <directory suffix=".php">application/app</directory>
+          <directory suffix=".php">application/lib</directory>
         </whitelist>
     </filter>
 </phpunit>

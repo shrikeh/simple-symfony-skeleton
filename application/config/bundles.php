@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Kernel\Environment\EnvironmentInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Environment\EnvironmentInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Tests\Utils\TestCaseBundle\TestCaseBundle;
 
