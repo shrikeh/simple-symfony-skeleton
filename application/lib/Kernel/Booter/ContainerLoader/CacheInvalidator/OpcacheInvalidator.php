@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator;
+namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator;
 
 use function filter_var;
 use function function_exists;

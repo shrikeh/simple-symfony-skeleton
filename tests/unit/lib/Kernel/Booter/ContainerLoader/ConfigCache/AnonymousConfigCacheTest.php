@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache;
 
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator\CacheInvalidatorInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
 use SplFileObject;
 use Symfony\Component\Filesystem\Filesystem;
 

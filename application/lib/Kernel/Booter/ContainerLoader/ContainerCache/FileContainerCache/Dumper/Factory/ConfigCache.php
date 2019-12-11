@@ -6,7 +6,7 @@ namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\Fi
 
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\DebugConfigCache;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator\CacheInvalidatorInterface;
 use SplFileObject;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper;
 
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\AnonymousConfigCache;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\CachePath;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCacheFactoryInterface;
 use SplFileObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,20 +21,20 @@ final class SymfonyPhpDumper implements ContainerDumperInterface
     /** @var Filesystem */
     private FileSystem $fileSystem;
     /**
-     * @var ConfigCacheFactoryInterface
+     * @var Factory\ConfigCacheFactoryInterface
      */
-    private ConfigCacheFactoryInterface $configCacheFactory;
+    private Factory\ConfigCacheFactoryInterface $configCacheFactory;
 
     /**
      * SymfonyPhpDumper constructor.
      * @param CachePath $cachePath
      * @param Filesystem $fileSystem
-     * @param ConfigCacheFactoryInterface $configCacheFactory
+     * @param Factory\ConfigCacheFactoryInterface $configCacheFactory
      */
     public function __construct(
         CachePath $cachePath,
         Filesystem $fileSystem,
-        ConfigCacheFactoryInterface $configCacheFactory
+        Factory\ConfigCacheFactoryInterface $configCacheFactory
     ) {
         $this->cachePath = $cachePath;
         $this->fileSystem = $fileSystem;

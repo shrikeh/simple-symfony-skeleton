@@ -6,7 +6,7 @@ namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache;
 
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteContentTrait;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ConfigCache\Traits\WriteMetadataTrait;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator\CacheInvalidatorInterface;
 use SplFileObject;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;

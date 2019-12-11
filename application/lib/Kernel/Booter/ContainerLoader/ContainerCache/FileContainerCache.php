@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache;
 
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\CachePath;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\ContainerDumperInterface;
+
 use Shrikeh\TestSymfonyApp\Kernel\Environment\EnvironmentInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,18 +16,18 @@ final class FileContainerCache implements ContainerCacheInterface
     private CachePath $cache;
 
     /**
-     * @var ContainerDumperInterface
+     * @var FileContainerCache\Dumper\ContainerDumperInterface
      */
-    private ContainerDumperInterface $containerDumper;
+    private FileContainerCache\Dumper\ContainerDumperInterface $containerDumper;
 
     /**
      * FileContainerCache constructor.
      * @param CachePath $cache
-     * @param ContainerDumperInterface $containerDumper
+     * @param FileContainerCache\Dumper\ContainerDumperInterface $containerDumper
      */
     public function __construct(
         CachePath $cache,
-        ContainerDumperInterface $containerDumper
+        FileContainerCache\Dumper\ContainerDumperInterface $containerDumper
     ) {
         $this->cache = $cache;
         $this->containerDumper = $containerDumper;
