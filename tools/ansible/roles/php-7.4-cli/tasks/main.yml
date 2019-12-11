@@ -20,6 +20,7 @@
     pkg:
       - php7.4-cli
       - php7.4-xml
+      - php7.4-zip
       - php7.4-json
       - pkg-php-tools
       - php7.4-dev
