@@ -1,8 +1,4 @@
-ARG PHP_TAG="7.4.0RC5-cli-alpine"
-
-FROM php:${PHP_TAG} as security-check
-
-RUN apk add --no-cache git curl
+FROM shrikeh/php7.4-cli-dev:latest as security-check
 
 WORKDIR /security-check
 

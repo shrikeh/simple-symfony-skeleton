@@ -2,10 +2,21 @@
 version: "3.7"
 
 services:
+  dev-php-base:
+    build:
+      context: ./
+      dockerfile: tools/docker/dev/php-base/Dockerfile
+    image: shrikeh/php7.4-cli-dev:latest
+  composer:
+    build:
+      context: ./
+      dockerfile: tools/docker/dev/composer/Dockerfile
+    volumes:
+      - .:/code
   symfony-cli:
     build:
       context: ./
-      dockerfile: ./tools/docker/symfony-cli/Dockerfile
+      dockerfile: tools/docker/dev/symfony-cli/Dockerfile
     volumes:
       - .:/code
   infection:
@@ -20,10 +31,14 @@ services:
       dockerfile: tools/docker/dev/phpcs/Dockerfile
     volumes:
       - .:/code
+    depends_on:
+      - composer
   phpunit:
     build:
       context: ./
       dockerfile: tools/docker/dev/phpunit/Dockerfile
+    depends_on:
+      - composer
     environment:
       PHPUNIT_RESULT_CACHE: '/cache/.phpunit.result.cache'
     volumes:
@@ -44,3 +59,5 @@ services:
       dockerfile: tools/docker/dev/phpspec/Dockerfile
     volumes:
       - .:/code
+    depends_on:
+      - composer

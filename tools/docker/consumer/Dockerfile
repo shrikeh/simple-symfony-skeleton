@@ -1,5 +1,4 @@
-ARG PHP_TAG="7.4.0RC5-cli-alpine"
-FROM php:${PHP_TAG} as build-consumer
+FROM shrikeh/php7.4-cli:latest AS build-consumer
 ARG COMPOSER_BUILD='--no-dev'
 
 RUN apk add --no-cache git
@@ -16,15 +15,10 @@ COPY ./composer.lock .
 COPY ./application ./application
 RUN php /bin/composer.phar install ${COMPOSER_BUILD} --classmap-authoritative
 
-FROM php:${PHP_TAG} as consumer
-
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+FROM shrikeh/php7.4-cli:latest as consumer
 ENV APP_ENV test
-RUN apk add rabbitmq-c rabbitmq-c-dev
-
-RUN apk add --no-cache $PHPIZE_DEPS && pecl install amqp ds && docker-php-ext-enable amqp ds
 
 WORKDIR /app
 COPY --from=build-consumer /build .
 
-ENTRYPOINT ["php", "application/bin/symfony", "messenger:consume", "-vv"]
+ENTRYPOINT ["php", "application/bin/console", "messenger:consume", "-vv"]

@@ -9,6 +9,11 @@ services:
     networks:
       - amqp_consumers
       - amqp_senders
+  base-php:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/php/Dockerfile
+    image: shrikeh/php7.4-cli:latest
   cli:
     build:
       context: ./
