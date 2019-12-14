@@ -27,4 +27,4 @@ RUN apk add --no-cache $PHPIZE_DEPS && pecl install amqp ds && docker-php-ext-en
 WORKDIR /app
 COPY --from=build-consumer /build .
 
-ENTRYPOINT ["php", "application/bin/console", "messenger:consume", "-vv"]
+ENTRYPOINT ["php", "application/bin/symfony", "messenger:consume", "-vv"]

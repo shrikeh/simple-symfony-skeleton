@@ -17,7 +17,6 @@ function run_test() {
     local TEST_CONTAINER="${1}";
     if has_docker_compose ${TEST_CONTAINER};
     then
-        composer install;
         echo "Running docker container ${TEST_CONTAINER}";
         docker-compose -f docker-compose.yml -f docker-compose.dev.yml run "${TEST_CONTAINER}";
     fi

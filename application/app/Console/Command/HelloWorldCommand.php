@@ -83,7 +83,6 @@ final class HelloWorldCommand extends Command
             'Sent %s message "%s" to message bus',
             $this->getName(),
             $message
-
         ));
 
         return 0;

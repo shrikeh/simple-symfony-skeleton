@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache;
 
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\CachePath;
-
 use Shrikeh\TestSymfonyApp\Kernel\Environment\EnvironmentInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;

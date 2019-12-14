@@ -9,8 +9,6 @@ use Shrikeh\TestSymfonyApp\ServiceProvider\ConsoleProvider;
 use Shrikeh\TestSymfonyApp\ServiceProvider\KernelProvider;
 use Symfony\Component\Console\Input\InputInterface;
 
-require_once dirname(__DIR__) . '/bootstrap.php';
-
 function console()
 {
     if (false === in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
@@ -45,6 +43,3 @@ function console()
 
     $application->run($input);
 }
-
-
-console();

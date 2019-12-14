@@ -27,4 +27,4 @@ WORKDIR /app
 
 COPY --from=build-cli /build .
 
-ENTRYPOINT ["php", "application/bin/console", "shrikeh:helloworld"]
+ENTRYPOINT ["php", "application/bin/symfony", "shrikeh:helloworld"]
