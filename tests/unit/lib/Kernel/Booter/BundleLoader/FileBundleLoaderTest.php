@@ -38,25 +38,4 @@ final class FileBundleLoaderTest extends TestCase
             $this->assertInstanceOf(BundleInterface::class, $bundle);
         }
     }
-
-    /**
-     * @test
-     */
-    public function itAddsTheResourceToTheContainerBuilder(): void
-    {
-        $bundlesFixturePath = FIXTURES_DIR . '/fakebundles.php';
-
-        $fileResource = new FileResource($bundlesFixturePath);
-        $environment = Environment::create(Environment::ENV_TEST);
-
-        $bundleLoader = new FileBundleLoader(
-            $fileResource,
-            $environment
-        );
-
-        $containerBuilder = $this->prophesize(ContainerBuilder::class);
-        $containerBuilder->addResource($fileResource)->shouldBeCalled();
-
-        $bundleLoader->addContainerResource($containerBuilder->reveal());
-    }
 }

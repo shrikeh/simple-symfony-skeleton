@@ -33,11 +33,7 @@ final class ConsoleProvider implements ServiceProviderInterface
      */
     public static function create(Container $container = null): Container
     {
-        if (!$container) {
-            $container = new Container();
-            $container->register(new KernelProvider());
-        }
-
+        $container = $container ?? KernelProvider::create();
         $container->register(new self());
 
         return $container;

@@ -50,14 +50,6 @@ final class FileBundleLoader implements BundlerLoaderInterface
     }
 
     /**
-     * @param ContainerBuilder $containerBuilder
-     */
-    public function addContainerResource(ContainerBuilder $containerBuilder): void
-    {
-        $containerBuilder->addResource($this->bundleResource);
-    }
-
-    /**
      * @return BundleIterator
      */
     private function getBundleIterator(): BundleIterator

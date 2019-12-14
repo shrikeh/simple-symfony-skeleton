@@ -76,15 +76,18 @@ final class HelloWorldCommandTest extends TestCase
                 return $envelope;
             }
         );
+        $inputMsg = 'Baz';
 
         $testCommand = new HelloWorldCommand($this->messageBus->reveal(), $this->logger->reveal());
-        $this->input->getOption(HelloWorldCommand::ARG_TEST_MESSAGE)->willReturn('Baz');
+        $this->input->getOption(HelloWorldCommand::ARG_TEST_MESSAGE)->willReturn($inputMsg);
         $testCommand->run($this->input->reveal(), $this->output->reveal());
 
         $this->logger->debug(
             Argument::containingString('Message sent to command bus'),
             [HelloWorldCommand::LOG_CONTEXT]
         )->shouldHaveBeenCalled();
+
+        $this->output->writeln(Argument::containingString($inputMsg))->shouldHaveBeenCalled();
     }
 
     public function testItThrowsACommandDispatchFailedExceptionIfTheMessageFailsToSend(): void

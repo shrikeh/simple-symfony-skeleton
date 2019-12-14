@@ -5,4 +5,4 @@ Feature: So that I can deliver quality
   Scenario: Fire a test message
     Given that I have the message "Hello behat!"
     When I send this message
-    Then it is received.
+    Then it is received

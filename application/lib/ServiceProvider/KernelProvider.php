@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shrikeh\TestSymfonyApp\ServiceProvider;
 
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Shrikeh\TestSymfonyApp\Console\Application;
 use Shrikeh\TestSymfonyApp\Console\Kernel;
 use Shrikeh\TestSymfonyApp\Deprecation\DeprecationsCollection;
@@ -11,26 +13,24 @@ use Shrikeh\TestSymfonyApp\Kernel\Booter\Booter;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\BooterInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\BundleLoader\BundlerLoaderInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\BundleLoader\FileBundleLoader;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCache;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCacheFactoryInterface;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\CacheInvalidatorInterface;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Invalidator\OpcacheInvalidator;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
-use Shrikeh\TestSymfonyApp\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
-use Shrikeh\TestSymfonyApp\Kernel\ConfigurationLoader\FileConfigurationLoader;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator\CacheInvalidatorInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\CacheInvalidator\OpcacheInvalidator;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\ContainerCacheInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\CachePath;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\ContainerDumperInterface;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCache;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\Factory\ConfigCacheFactoryInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerCache\FileContainerCache\Dumper\SymfonyPhpDumper;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerLoader;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ContainerLoaderInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleaner;
+use Shrikeh\TestSymfonyApp\Kernel\Booter\ContainerLoader\ErrorHandler\DeprecationsHandler\BacktraceCleanerInterface;
+use Shrikeh\TestSymfonyApp\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
+use Shrikeh\TestSymfonyApp\Kernel\ConfigurationLoader\FileConfigurationLoader;
 use Shrikeh\TestSymfonyApp\Kernel\Environment\Environment;
 use Shrikeh\TestSymfonyApp\Kernel\Environment\EnvironmentInterface;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,6 +42,19 @@ final class KernelProvider implements ServiceProviderInterface
 {
     /** @var string  */
     public const KEY_CACHE_FILE = 'shrikeh.cache.path.file';
+
+    /**
+     * @param Container|null $container
+     * @return Container
+     */
+    public static function create(Container $container = null): Container
+    {
+        $container = $container ?? new Container();
+
+        $container->register(new self());
+
+        return $container;
+    }
 
     /**
      * {@inheritDoc}

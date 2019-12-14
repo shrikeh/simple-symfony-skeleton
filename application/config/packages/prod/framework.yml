@@ -1,0 +1,18 @@
+---
+framework:
+  messenger:
+    transports:
+      amqp:
+        dsn: "%env(string:MESSENGER_TRANSPORT_DSN)%"
+        # default configuration
+        retry_strategy:
+          max_retries: 5
+          # milliseconds delay
+          delay: 5000
+          # causes the delay to be higher before each retry
+          # e.g. 1 second delay, 2 seconds, 4 seconds
+          multiplier: 2
+          max_delay: 0
+    routing:
+      App\Message\HelloWorldMessage: amqp
+

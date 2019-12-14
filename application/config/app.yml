@@ -1,7 +1,4 @@
 ---
-parameters:
-  env(MESSENGER_TRANSPORT_DSN): 'amqp://guest:guest@amqp:5672/%2f/messages'
-
 services:
   # default configuration for services in *this* file
   _defaults:
@@ -12,6 +9,11 @@ services:
   # this creates a service per class whose id is the fully-qualified class name
   App\:
     resource: '%kernel.project_dir%/app/*'
-    exclude: '%kernel.project_dir%/src/{Kernel,DependencyInjection,Entity,Migrations}'
+    exclude: '%kernel.project_dir%/src/{Kernel,DependencyInjection,Entity,Migrations,ServiceProvider}'
   TechTest\BusinessLogic\:
     resource: '%kernel.project_dir%/src/*'
+  Shrikeh\TestSymfonyApp\:
+    resource: '%kernel.project_dir%/lib/*'
+    exclude: '%kernel.project_dir%/lib/{Console,Kernel}'
+    autowire: false
+    autoconfigure: false

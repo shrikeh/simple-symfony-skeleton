@@ -42,7 +42,7 @@ final class HelloWorldCommand extends Command
      */
     public function __construct(MessageBusInterface $messageBus, LoggerInterface $logger)
     {
-        parent::__construct(static::NAME);
+        parent::__construct(self::NAME);
 
         $this->messageBus = $messageBus;
         $this->logger = $logger;
@@ -68,7 +68,10 @@ final class HelloWorldCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $envelope = $this->getMessageEnvelope($input);
+        $message = $input->getOption(self::ARG_TEST_MESSAGE);
+
+        $envelope = $this->getMessageEnvelope($message);
+
         try {
             $this->messageBus->dispatch($envelope);
         } catch (Exception $e) {
@@ -76,21 +79,28 @@ final class HelloWorldCommand extends Command
         }
         $this->logMessageSent($envelope);
 
+        $output->writeln(sprintf(
+            'Sent %s message "%s" to message bus',
+            $this->getName(),
+            $message
+
+        ));
+
         return 0;
     }
 
     /**
-     * @param InputInterface $input
+     * @param string $inputMessage
      * @return Envelope
      */
-    private function getMessageEnvelope(InputInterface $input): Envelope
+    private function getMessageEnvelope(string $inputMessage): Envelope
     {
         $stamp = new SentStamp(
             __CLASS__,
             sprintf('console:%s', $this->getName())
         );
         return new Envelope(
-            new HelloWorldMessage($input->getOption(self::ARG_TEST_MESSAGE)),
+            new HelloWorldMessage($inputMessage),
             [$stamp]
         );
     }

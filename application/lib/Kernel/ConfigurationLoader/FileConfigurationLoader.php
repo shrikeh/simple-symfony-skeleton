@@ -68,9 +68,9 @@ final class FileConfigurationLoader implements ConfigurationLoaderInterface
         $environment = $this->environment->getName();
 
         yield sprintf('%s/{packages}/*%s', $this->configDir, self::CONFIG_EXTS);
-        yield sprintf('%s/{packages}/%s/**/*/%s', $this->configDir, $environment, self::CONFIG_EXTS);
-        yield sprintf('%s/{services}/%s', $this->configDir, self::CONFIG_EXTS);
-        yield sprintf('%s/{services}/_%s', $this->configDir, self::CONFIG_EXTS);
+        yield sprintf('%s/{packages}/%s/**/*%s', $this->configDir, $environment, self::CONFIG_EXTS);
+        yield sprintf('%s/{services}/*%s', $this->configDir, self::CONFIG_EXTS);
+        yield sprintf('%s/{services}/_*%s', $this->configDir, self::CONFIG_EXTS);
     }
 
     /**

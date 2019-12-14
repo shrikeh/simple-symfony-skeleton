@@ -2,10 +2,13 @@
 default:
   autoload:
     '': "%paths.base%/tests/behat/src"
+  extensions:
+    Tests\Behat\ServiceContainer\BootstrapExtension:
+      path: "tests/behat/bootstrap.php"
   suites:
     default:
       paths:
         features: "%paths.base%/features"
         bootstrap: "%paths.base%/tests/behat/bootstrap.php"
       contexts:
-        - Tests\Behat\Context\CliContext: ~
+        - Tests\Behat\Context\HelloWorld\ConsoleContext: ~
