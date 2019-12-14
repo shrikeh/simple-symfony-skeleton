@@ -2,6 +2,12 @@
 version: "3.7"
 
 services:
+  symfony-cli:
+    build:
+      context: ./
+      dockerfile: ./tools/docker/symfony-cli/Dockerfile
+    volumes:
+      - .:/code
   infection:
     build:
       context: ./
@@ -30,6 +36,8 @@ services:
       dockerfile: tools/docker/dev/security-check/Dockerfile
     volumes:
       - .:/security-check
+    depends_on:
+      - symfony-cli
   phpspec:
     build:
       context: ./

@@ -26,7 +26,7 @@ composer:
 build-docker: down
 	docker-compose build --parallel
 
-test: phpcs phpspec infection
+test: security-check phpcs phpspec infection
 
 down:
 	docker-compose down
