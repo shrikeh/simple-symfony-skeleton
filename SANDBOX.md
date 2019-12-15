@@ -25,8 +25,9 @@ Additionally, as the default Symfony-generated kernel is not easily unit tested 
 
 Beyond the standard `/vendor` directory, there are three main directories:
 - `/application`: This is where the main code runs. It is separated into two directories in a hope to keep it aligned with Domain-Driven Design (DDD):
-  - `lib`: for the domain (business logic)
-  - `src`: for the implementation
+  - `src`: for the domain (business logic)
+  - `app`: for the implementation
+  - `lib`: An implementation of the Symfony kernel that is testable by mortals.
   
 - `/tests`: this is where all the various tests exist. 
 
