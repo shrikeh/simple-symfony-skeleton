@@ -6,9 +6,8 @@ default:
     Tests\Behat\ServiceContainer\BootstrapExtension:
       path: "tests/behat/bootstrap.php"
   suites:
-    default:
+    hello_world:
       paths:
-        features: "%paths.base%/features"
-        bootstrap: "%paths.base%/tests/behat/bootstrap.php"
+        - "%paths.base%/features/hello_world"
       contexts:
         - Tests\Behat\Context\HelloWorld\ConsoleContext: ~

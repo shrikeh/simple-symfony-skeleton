@@ -51,8 +51,6 @@ services:
       dockerfile: tools/docker/dev/security-check/Dockerfile
     volumes:
       - .:/security-check
-    depends_on:
-      - symfony-cli
   phpspec:
     build:
       context: ./
