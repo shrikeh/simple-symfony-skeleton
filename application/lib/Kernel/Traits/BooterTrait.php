@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shrikeh\TestSymfonyApp\Kernel\Traits;
 
-use Shrikeh\TestSymfonyApp\Kernel\Booter\BooterInterface;
+use Shrikeh\TestSymfonyApp\Booter\BooterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 trait BooterTrait

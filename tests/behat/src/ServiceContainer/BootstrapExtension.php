@@ -15,11 +15,10 @@ final class BootstrapExtension implements Extension
     public const CONFIG_KEY = 'bootstrap';
 
     /**
-     * You can modify the container here before it is dumped to PHP code.
+     * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {
-
     }
 
     /**
@@ -42,7 +41,7 @@ final class BootstrapExtension implements Extension
      *
      * @param ExtensionManager $extensionManager
      */
-    public function initialize(ExtensionManager $extensionManager)
+    public function initialize(ExtensionManager $extensionManager): void
     {
         // TODO: Implement initialize() method.
     }
@@ -52,7 +51,7 @@ final class BootstrapExtension implements Extension
      *
      * @param ArrayNodeDefinition $builder
      */
-    public function configure(ArrayNodeDefinition $builder)
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $builder
             ->addDefaultsIfNotSet()
@@ -68,7 +67,7 @@ final class BootstrapExtension implements Extension
      * @param ContainerBuilder $container
      * @param array $config
      */
-    public function load(ContainerBuilder $container, array $config)
+    public function load(ContainerBuilder $container, array $config): void
     {
         $basePath = $container->getParameter('paths.base');
         $bootstrapPath = $config['path'];
@@ -89,6 +88,7 @@ final class BootstrapExtension implements Extension
      */
     private function loadBootstrap(string $path): void
     {
+        // wrap the require in a callable so it doesn't get access to $this.
         $bootstrapLoader = Closure::fromCallable(static function ($path): void {
             require_once $path;
         });

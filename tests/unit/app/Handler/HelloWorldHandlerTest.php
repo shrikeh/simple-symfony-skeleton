@@ -7,7 +7,6 @@ namespace Tests\Unit\App\Handler;
 use App\Handler\HelloWorldHandler;
 use App\Message\HelloWorldMessage;
 use PHPUnit\Framework\TestCase;
-
 use Symfony\Component\Console\Output\OutputInterface;
 use TechTest\BusinessLogic\HelloWorld\HelloWorldService;
 

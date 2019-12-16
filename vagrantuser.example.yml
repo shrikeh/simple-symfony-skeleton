@@ -10,3 +10,5 @@ vm:
   hostname: "php74.shrikeh.vagrant"
   synced_folder: "/foo"
   user: "vagrant"
+symfony:
+  cache_dir: '/cache'

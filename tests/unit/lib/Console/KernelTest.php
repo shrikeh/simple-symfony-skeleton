@@ -6,7 +6,7 @@ namespace Tests\Unit\TestSymfonyApp\Console;
 
 use Shrikeh\TestSymfonyApp\Console\Exception\HandleMethodNotImplemented;
 use Shrikeh\TestSymfonyApp\Console\Kernel;
-use Shrikeh\TestSymfonyApp\Kernel\Booter\BooterInterface;
+use Shrikeh\TestSymfonyApp\Booter\BooterInterface;
 use Shrikeh\TestSymfonyApp\Kernel\ConfigurationLoader\ConfigurationLoaderInterface;
 use Shrikeh\TestSymfonyApp\Kernel\Environment\EnvironmentInterface;
 use PHPUnit\Framework\TestCase;

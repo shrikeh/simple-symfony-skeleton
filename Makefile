@@ -26,7 +26,7 @@ composer:
 build-docker: down base-dev
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --parallel
 
-test: base-dev security-check phpcs phpspec infection
+test: base-dev security-check phpcs phpspec infection behat
 
 down:
 	docker-compose down
@@ -55,3 +55,6 @@ phpunit:
 
 security-check:
 	./tools/bin/run_test.sh security-check
+
+behat:
+	./tools/bin/run_test.sh behat

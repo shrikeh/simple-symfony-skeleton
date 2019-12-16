@@ -29,5 +29,4 @@ final class FqnPathSpec extends ObjectBehavior
 
         $this->getBaseDir()->shouldReturn($fileInfo);
     }
-
 }

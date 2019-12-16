@@ -9,6 +9,7 @@ use Prophecy\Prophet;
 
 trait ProphetTrait
 {
+    /** @var Prophet */
     private Prophet $prophet;
 
     /**

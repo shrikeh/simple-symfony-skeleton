@@ -27,7 +27,7 @@ final class CreateUnitTestCommandSpec extends ObjectBehavior
         $fqn = 'Thing\To\Test';
 
         $messageBus->dispatch(Argument::type(CreateUnitTestMessage::class))
-            ->will(function(array $args) use ($fqn) {
+            ->will(function (array $args) use ($fqn) {
                 $msg = $args[0];
                 if ($msg->getTestSubject() !== $fqn) {
                     throw new MatcherException('Fqn does not match!');

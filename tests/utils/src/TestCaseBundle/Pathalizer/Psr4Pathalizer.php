@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Tests\Utils\TestCaseBundle\Pathalizer;
 
 use SplFileInfo;
+use Tests\Utils\TestCaseBundle\Pathalizer\ClassLoader\ClassLoaderInterface;
 use Tests\Utils\UnitTest\ClassNamespace;
 use Tests\Utils\UnitTest\Service\Pathalizer\PathalizerInterface;
 
 use function preg_quote;
 use function preg_replace;
-
-use Tests\Utils\TestCaseBundle\Pathalizer\ClassLoader\ClassLoaderInterface;
 
 final class Psr4Pathalizer implements PathalizerInterface
 {

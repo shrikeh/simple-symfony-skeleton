@@ -42,8 +42,7 @@ final class CreateUnitTestHandlerSpec extends ObjectBehavior
         TestCaseRendererInterface $testCaseRenderer,
         Filesystem $filesystem,
         NamespaceMapperInterface $namespaceMapper
-    ): void
-    {
+    ): void {
         $subjectFqn = 'Some\Subject\ToTest';
         $testCaseFqn = ClassNamespace::fromNamespaceString('Some\New\TestCase');
 
