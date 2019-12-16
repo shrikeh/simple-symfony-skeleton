@@ -1,5 +1,6 @@
-vendor/
+
 application/bin/symfony
+/vendor
 .*
 *.iml
 *.log
