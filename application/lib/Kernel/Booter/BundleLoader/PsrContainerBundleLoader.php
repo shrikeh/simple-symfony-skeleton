@@ -18,7 +18,7 @@ final class PsrContainerBundleLoader implements BundlerLoaderInterface
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * PsrContainerBundleLoader constructor.

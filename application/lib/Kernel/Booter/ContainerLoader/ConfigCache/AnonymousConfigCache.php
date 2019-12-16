@@ -42,7 +42,7 @@ abstract class AnonymousConfigCache implements ConfigCacheInterface
      */
     public function getPath(): string
     {
-        return $this->lock->getPath();
+        return $this->lock->getPathname();
     }
 
     /**

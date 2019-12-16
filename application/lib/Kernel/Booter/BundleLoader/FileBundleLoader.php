@@ -14,8 +14,6 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 final class FileBundleLoader implements BundlerLoaderInterface
 {
-    /** @var string  */
-    public const ENVIRONMENTS_ALL = 'all';
     /**
      * @var FileResource
      */

@@ -177,7 +177,7 @@ final class KernelProvider implements ServiceProviderInterface
         };
 
         $p[static::KEY_CACHE_FILE] = $p->protect(static function (): string {
-            return '/var/cache/symfony/Container.php';
+            return '/cache/Container.php';
         });
     }
 }

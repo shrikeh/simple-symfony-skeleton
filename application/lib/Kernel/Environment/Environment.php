@@ -32,7 +32,7 @@ final class Environment implements EnvironmentInterface
 
     /**
      * @param ServerBag $serverBag
-     * @param bool|null $debug
+     * @param bool $debug
      * @return Environment
      */
     public static function fromServerBag(ServerBag $serverBag, bool $debug = null): self

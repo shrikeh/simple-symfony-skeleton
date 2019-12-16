@@ -53,7 +53,7 @@ final class FileContainerCache implements ContainerCacheInterface
 
     /**
      * @param EnvironmentInterface $environment
-     * @param object|null $container
+     * @param object $container
      * @return bool
      */
     private function isValid(EnvironmentInterface $environment, object $container = null): bool

@@ -9,7 +9,7 @@ parameters:
 
   test_case.namespaces:
     App: 'Tests\Unit\App'
-    Shrikeh\TestSymfonyApp: 'Tests\Unit\
+    Shrikeh\TestSymfonyApp: 'Tests\Unit\'
 
   test_case.template_dir: !php/const Tests\Utils\TestCaseBundle\TestCaseBundle::DEFAULT_TEMPLATE_DIR
 
@@ -26,7 +26,7 @@ services:
     exclude: '../../{Kernel,DependencyInjection,Entity,Migrations}'
 
   Composer\Autoload\ClassLoader:
-    factory: [Env, getAutoloader]
+    factory: [Shrikeh\TestSymfonyApp\Bootstrap, getAutoloader]
 
   Tests\Utils\TestCaseBundle\TestCaseRenderer\TwigTestCaseRenderer:
     arguments:

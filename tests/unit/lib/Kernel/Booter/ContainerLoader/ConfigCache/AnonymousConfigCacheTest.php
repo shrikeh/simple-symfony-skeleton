@@ -68,7 +68,7 @@ final class AnonymousConfigCacheTest extends TestCase
         $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
         $filesystem = new Filesystem();
 
-        $lock->getPath()->willReturn($fakePath);
+        $lock->getPathname()->willReturn($fakePath);
         $lock->rewind()->shouldBeCalled();
         $lock->ftruncate(0)->shouldBeCalled();
         $lock->fwrite($content)->shouldBeCalled();
@@ -98,7 +98,7 @@ final class AnonymousConfigCacheTest extends TestCase
         $invalidator = $this->prophesize(CacheInvalidatorInterface::class);
         $filesystem = $this->prophesize(Filesystem::class);
 
-        $lock->getPath()->willReturn($fakePath);
+        $lock->getPathname()->willReturn($fakePath);
         $lock->rewind()->shouldBeCalled();
         $lock->ftruncate(0)->shouldBeCalled();
         $lock->fwrite($content)->shouldBeCalled();

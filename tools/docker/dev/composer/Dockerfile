@@ -6,4 +6,4 @@ COPY ./tools/bin/install-composer.sh .
 RUN sh ./install-composer.sh
 
 WORKDIR /code
-CMD php /bin/composer.phar install
+CMD php /bin/composer.phar install --dumpautoload

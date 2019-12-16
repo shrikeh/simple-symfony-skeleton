@@ -61,3 +61,9 @@ services:
       - .:/code
     depends_on:
       - composer
+  behat:
+    build:
+      context: ./
+      dockerfile: tools/docker/dev/behat/Dockerfile
+    volumes:
+      - .:/code

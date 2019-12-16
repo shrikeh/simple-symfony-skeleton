@@ -13,15 +13,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.user.defaults = {
-      :vm => {
-        :php74_box => 'hashicorp/bionic64',
-        :ip => '192.168.15.107',
-        :host_memory => 1024,
-        :host_cpus => 2,
-        :hostname => 'php74.shrikeh.vagrant',
-        :synced_folder => '/vagrant',
-        :user => 'vagrant'
-      }
+    :vm => {
+      :php74_box => 'hashicorp/bionic64',
+      :ip => '192.168.15.107',
+      :host_memory => 1024,
+      :host_cpus => 2,
+      :hostname => 'php74.shrikeh.vagrant',
+      :synced_folder => '/vagrant',
+      :user => 'vagrant'
+    },
+      :symfony => {
+      :cache_dir => '/cache'
+    }
   }
 
   config.vm.define 'php74', primary: true do |php74|
@@ -56,6 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     php74.vm.provision 'ansible' do |ansible|
       ansible.playbook = 'tools/ansible/playbook.yml'
+      ansible.become = true
       ansible.compatibility_mode = '2.0'
       ansible.galaxy_role_file = 'tools/ansible/requirements.yml'
       ansible.galaxy_roles_path = 'tools/ansible/galaxy'
@@ -65,7 +69,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
       ansible.extra_vars = {
           docker_users: [config.user.vm.user],
-          vagrant_synced_folder_path: config.user.vm.synced_folder
+          vagrant_synced_folder_path: config.user.vm.synced_folder,
+          symfony_cache_dir: config.user.symfony.cache_dir
       }
     end
   end
